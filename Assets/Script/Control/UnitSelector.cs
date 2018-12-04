@@ -97,8 +97,8 @@ namespace Control
 			{
 				movementMeshFilter.gameObject.SetActive(true);
 				rangeMeshFilter.gameObject.SetActive(true);
-				transform.position = unit.position;
-				rangeIndicatorTransform.position = unit.position;
+				transform.position = (Vector2)unit.position;
+				rangeIndicatorTransform.position = (Vector2)unit.position;
 				ModifyCircle(movementMesh, unit.movementRadius, unit.movementRadius + stripWidth);
 				ModifyCircle(rangeMesh, unit.viewRadius, unit.viewRadius + stripWidth);
 			}
@@ -127,7 +127,7 @@ namespace Control
 				{
 					if ((selection.position - position).sqrMagnitude > selection.selectionRadius * selection.selectionRadius)
 					{
-						selection.Move(selection.position + Vector2.ClampMagnitude(position - selection.position, selection.movementRadius));
+						selection.Move(Convert(position));
 					}
 				}
 				Select(selection);
@@ -144,7 +144,7 @@ namespace Control
 				}
 				else
 				{
-					rangeIndicatorTransform.position = selection.position;
+					rangeIndicatorTransform.position = (Vector2)selection.position;
 				}
 			}
 		}
@@ -154,6 +154,11 @@ namespace Control
 			triggerReleaseEvent = false;
 			selection = prevSelection;
 			Select(selection);
+		}
+
+		private Vector2Int Convert(Vector2 p)
+		{
+			return new Vector2Int(Mathf.RoundToInt(p.x), Mathf.RoundToInt(p.y));
 		}
 	}
 }
