@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit : MonoBehaviour 
@@ -18,6 +17,7 @@ public class Unit : MonoBehaviour
 		position = transform.position;
 		Spawn(position, type);
 	}
+	
 	private void OnDrawGizmos()
 	{
 		if (type == UnitType.Friendly)
@@ -26,6 +26,7 @@ public class Unit : MonoBehaviour
 			Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(GetComponent<Transform>().position, selectionRadius);
 	}
+	
 	public void Spawn(Vector2 position,UnitType type)
 	{
 		this.position = position;
@@ -33,10 +34,12 @@ public class Unit : MonoBehaviour
 		transform.position = position;
 		units.Add(this);
 	}
+	
 	public void Despawn()
 	{
 		units.Remove(this);
 	}
+	
 	public void Move(Vector2 position)
 	{
 		this.position = position;

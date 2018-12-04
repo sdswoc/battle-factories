@@ -10,7 +10,7 @@ public class Map : MonoBehaviour
     private void Awake()
     {
         Transform self = GetComponent<Transform>();
-        self.localScale = new Vector3(width, height, 0);
+        self.localScale = new Vector3(width, height, 1);
 		self.position = new Vector3(width*0.5f, height*0.5f, 0);
     }
 }
