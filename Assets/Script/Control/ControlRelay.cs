@@ -1,19 +1,32 @@
 ﻿using UnityEngine;
-
+using UI;
 namespace Control
 {
 	public class ControlRelay : MonoBehaviour, IControl
 	{
-		public UnitSelector unitSelector;
 		public UIMode uiMode;
+
 		private IControl currentControl;
 
+		private void Awake()
+		{
+			GameFlow.controlRelay = this;
+		}
+		private void Start()
+		{
+			SetMode(uiMode);
+		}
 		public void SetMode(UIMode mode)
 		{
 			if (mode == UIMode.Move)
 			{
-				currentControl = unitSelector;
+				currentControl = GameFlow.unitSelector;
 			}
+			else if (mode == UIMode.Setup)
+			{
+				currentControl = GameFlow.setupFactory;
+			}
+			GameFlow.uiPanelSwitcher.SwitchUIMode(mode);
 		}
 
 		public void KeyMoved(Vector2 position)
@@ -47,10 +60,12 @@ namespace Control
 				currentControl.KeyCanceled();
 			}
 		}
+
+
 	}
 
 	public enum UIMode
 	{
-		Setup,Move,EnemyMove,Fire
+		Setup = 0,Move = 1,EnemyMove = 2,Fire = 3
 	}
 }

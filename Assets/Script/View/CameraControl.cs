@@ -6,9 +6,9 @@ namespace View
 {
 	public class CameraControl : MonoBehaviour
 	{
-		public Map map;
 		public float minZoomFactor;
 		public float maxZoomFactor;
+
 		private new Camera camera;
 		private new Transform transform;
 		private float width;
@@ -20,6 +20,7 @@ namespace View
 
 		private void Awake()
 		{
+			GameFlow.cameraControl = this;
 			camera = GetComponent<Camera>();
 			transform = GetComponent<Transform>();
 			cameraResolution = new Vector2(camera.pixelWidth, camera.pixelHeight);
@@ -42,8 +43,8 @@ namespace View
 			float spanWidth, spanHeight, constrainWidth, constrainHeight;
 			spanWidth = maxPoint.x - minPoint.x;
 			spanHeight = maxPoint.y - minPoint.y;
-			constrainWidth = map.width;
-			constrainHeight = map.height;
+			constrainWidth = GameFlow.map.GetCameraWidth();
+			constrainHeight = GameFlow.map.GetCameraHeight();
 			if (spanWidth / spanHeight > constrainWidth / constrainHeight)
 			{
 				if (spanWidth > constrainWidth)
@@ -77,14 +78,14 @@ namespace View
 				displacement.y -= minPoint.y;
 				adjusted = true;
 			}
-			if (maxPoint.x > map.width)
+			if (maxPoint.x > GameFlow.map.GetCameraWidth())
 			{
-				displacement.x -= maxPoint.x - map.width;
+				displacement.x -= maxPoint.x - GameFlow.map.GetCameraWidth();
 				adjusted = true;
 			}
-			if (maxPoint.y > map.height)
+			if (maxPoint.y > GameFlow.map.GetCameraHeight())
 			{
-				displacement.y -= maxPoint.y - map.height;
+				displacement.y -= maxPoint.y - GameFlow.map.GetCameraHeight();
 				adjusted = true;
 			}
 			transform.position += (Vector3)displacement;

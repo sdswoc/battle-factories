@@ -19,6 +19,7 @@ namespace Control
 
 		private void Awake()
 		{
+			GameFlow.unitSelector = this;
 			transform = GetComponent<Transform>();
 			movementMesh = new Mesh();
 			rangeMesh = new Mesh();

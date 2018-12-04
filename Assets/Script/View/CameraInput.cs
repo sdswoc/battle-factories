@@ -12,9 +12,6 @@ namespace View
 		public bool touchControl;
 		public float mouseMovementFactor;
 		public float mouseZoomFactor;
-		public ControlRelay relay;
-		public EventSystem eventSystem;
-		public GraphicRaycaster graphicRaycaster;
 
 		private PointerEventData pointerEventData;
 		private CameraControl cameraControl;
@@ -28,13 +25,13 @@ namespace View
 
 		private void Awake()
 		{
+			GameFlow.cameraInput = this;
 			cameraControl = GetComponent<CameraControl>();
 			camera = GetComponent<Camera>();
 			if (Application.isMobilePlatform)
 			{
 				touchControl = true;
 			}
-			relay.SetMode(UIMode.Move);
 		}
 		
 		private void Update()
@@ -65,12 +62,12 @@ namespace View
 							if (validFinger.Count == 1)
 							{
 								touchMode = TouchMode.Single;
-								relay.KeyPressed(cameraControl.TransformCameraToWorld(touch.position));
+								GameFlow.controlRelay.KeyPressed(cameraControl.TransformCameraToWorld(touch.position));
 							}
 							else if (validFinger.Count == 2)
 							{
 								touchMode = TouchMode.Double;
-								relay.KeyCanceled();
+								GameFlow.controlRelay.KeyCanceled();
 								TriggerZoomStart((validFinger[0].position - validFinger[1].position).magnitude);
 								TriggerPanStart((validFinger[0].position + validFinger[1].position) * 0.5f);
 							}
@@ -96,7 +93,7 @@ namespace View
 							}
 							else if (touchMode == TouchMode.Single)
 							{
-								relay.KeyMoved(cameraControl.TransformCameraToWorld(validFinger[0].position));
+								GameFlow.controlRelay.KeyMoved(cameraControl.TransformCameraToWorld(validFinger[0].position));
 							}
 							break;
 						}
@@ -112,7 +109,7 @@ namespace View
 							if (touchMode == TouchMode.Single)
 							{
 								touchMode = TouchMode.None;
-								relay.KeyReleased(cameraControl.TransformCameraToWorld(validFinger[0].position));
+								GameFlow.controlRelay.KeyReleased(cameraControl.TransformCameraToWorld(validFinger[0].position));
 							}
 							validFinger.RemoveAt(x);
 							if (touchMode == TouchMode.Double)
@@ -139,7 +136,7 @@ namespace View
 			{
 				if (!OverlapTest(mousePosition))
 				{
-					relay.KeyPressed(cameraControl.TransformCameraToWorld(mousePosition));
+					GameFlow.controlRelay.KeyPressed(cameraControl.TransformCameraToWorld(mousePosition));
 					targetPosition = mousePosition;
 					upgradable = false;
 				}
@@ -150,7 +147,7 @@ namespace View
 				{
 					if ((mousePosition - targetPosition).sqrMagnitude > 0.01f)
 					{
-						relay.KeyMoved(cameraControl.TransformCameraToWorld(mousePosition));
+						GameFlow.controlRelay.KeyMoved(cameraControl.TransformCameraToWorld(mousePosition));
 					}
 				}
 			}
@@ -158,7 +155,7 @@ namespace View
 			{
 				if (!upgradable)
 				{
-					relay.KeyReleased(cameraControl.TransformCameraToWorld(mousePosition));
+					GameFlow.controlRelay.KeyReleased(cameraControl.TransformCameraToWorld(mousePosition));
 				}
 				upgradable = true;
 			}
@@ -172,10 +169,10 @@ namespace View
 		
 		private bool OverlapTest(Vector2 position)
 		{
-			pointerEventData = new PointerEventData(eventSystem);
+			pointerEventData = new PointerEventData(GameFlow.eventSystem);
 			pointerEventData.position = position;
 			List<RaycastResult> result = new List<RaycastResult>();
-			graphicRaycaster.Raycast(pointerEventData, result);
+			GameFlow.graphicRaycaster.Raycast(pointerEventData, result);
 			return (result.Count > 0);
 		}
 		
