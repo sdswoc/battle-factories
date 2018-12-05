@@ -18,4 +18,5 @@ public class GameFlow
 	public static UIPanelSwitcher uiPanelSwitcher;
 	public static EventSystem eventSystem;
 	public static GraphicRaycaster graphicRaycaster;
+	public static AStar aStar;
 }

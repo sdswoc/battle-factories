@@ -13,6 +13,9 @@ ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
 
         Pass
         {
+		ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
+
+        LOD 100
             Stencil {
                 Ref 0
                 Comp Equal
