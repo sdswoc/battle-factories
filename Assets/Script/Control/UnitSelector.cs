@@ -13,26 +13,28 @@ namespace Control
 		public MeshFilter rangeMeshFilter;
 		public MeshFilter pathMeshFilter;
 		public Transform rangeIndicatorTransform;
+		public Transform movementIndicatorTranform;
+		public Color positiveRangeColor;
+		public Color negativeRangeColor;
+		public Color neutralRangeColor;
+		public Color movementColor;
+		public Color pathColor;
+
 		private Mesh movementMesh;
 		private Mesh rangeMesh;
 		private Mesh pathMesh;
-		private new Transform transform;
 		private bool triggerReleaseEvent = false;
 		private Unit selection;
 		private Unit prevSelection;
-		private bool[,] validPosition;
-		private int width;
-		private int height;
+		private Vector2Int prevPointer;
 		private List<Vector3> vertices = new List<Vector3>();
 		private List<int> triangles = new List<int>();
 		private List<Color> colorList = new List<Color>();
-		private List<Vector2Int> pathList = new List<Vector2Int>();
-
+		private List<PathNode> pathList = new List<PathNode>();
 
 		private void Awake()
 		{
 			GameFlow.unitSelector = this;
-			transform = GetComponent<Transform>();
 			movementMesh = new Mesh();
 			rangeMesh = new Mesh();
 			pathMesh = new Mesh();
@@ -44,13 +46,6 @@ namespace Control
 			pathMeshFilter.mesh = pathMesh;
 		}
 
-		private void Start()
-		{
-			width = GameFlow.map.width;
-			height = GameFlow.map.height;
-			validPosition = new bool[GameFlow.map.width, GameFlow.map.height];
-		}
-
 		private Unit GetUnit(Vector2 position, UnitType type)
 		{
 			float maxDistance = float.PositiveInfinity;
@@ -59,14 +54,17 @@ namespace Control
 			{
 				if (Unit.units[i].type == type)
 				{
-					Unit un = Unit.units[i];
-					float distance = (un.position - position).sqrMagnitude;
-					if (distance < un.selectionRadius * un.selectionRadius)
+					if (Unit.units[i].selectable == true)
 					{
-						if (distance < maxDistance)
+						Unit un = Unit.units[i];
+						float distance = (un.position - position).sqrMagnitude;
+						if (distance < un.selectionRadius * un.selectionRadius)
 						{
-							maxDistance = distance;
-							tmpUnit = un;
+							if (distance < maxDistance)
+							{
+								maxDistance = distance;
+								tmpUnit = un;
+							}
 						}
 					}
 				}
@@ -76,19 +74,27 @@ namespace Control
 
 		private void Select(Unit unit)
 		{
+			pathList.Clear();
+			GeneratePathMesh(pathMesh);
 			if (unit == null)
 			{
 				movementMeshFilter.gameObject.SetActive(false);
 				rangeMeshFilter.gameObject.SetActive(false);
+				pathMeshFilter.gameObject.SetActive(false);
 			}
 			else
 			{
 				movementMeshFilter.gameObject.SetActive(true);
 				rangeMeshFilter.gameObject.SetActive(true);
+				pathMeshFilter.gameObject.SetActive(true);
+				
+				GenerateCircleMesh(movementMesh, unit.movementBlock, unit.movementBlock + stripWidth, circleDetailMedium);
+				SetMeshColor(movementMesh, movementColor);
+				GenerateCircleMesh(rangeMesh,unit.viewRadius,unit.viewRadius+stripWidth,circleDetailBig);
+				SetMeshColor(rangeMesh, neutralRangeColor);
+				movementIndicatorTranform.position = (Vector2)unit.position;
 				rangeIndicatorTransform.position = (Vector2)unit.position;
-				GameFlow.map.GeneratePotential(unit.position, unit.movementBlock);
-				GeneratePotentialMesh(movementMesh);
-				GenerateRangeMesh(rangeMesh,unit.viewRadius,unit.viewRadius+stripWidth,50);
+				prevPointer = unit.position;
 			}
 		}
 
@@ -99,10 +105,15 @@ namespace Control
 			if (selection == null)
 			{
 				Select(prevSelection);
+				if (prevSelection != null)
+				{
+					rangeIndicatorTransform.position = (Vector2)prevSelection.position;
+				}
 			}
 			else
 			{
 				Select(selection);
+				rangeIndicatorTransform.position = (Vector2)selection.position;
 			}
 		}
 
@@ -113,11 +124,13 @@ namespace Control
 				prevSelection = selection;
 				if (selection != null)
 				{
-					if (IsValidPosition(Convert(position), selection.position))
+					if (pathList.Count > 0)
 					{
-						
-						selection.Move(Convert(position));
-						Debug.Log("Move");
+						if (IsValidPosition(position, selection.position))
+						{
+							selection.Move(pathList);
+							Debug.Log("Move");
+						}
 					}
 				}
 				Select(selection);
@@ -128,31 +141,41 @@ namespace Control
 		{
 			if (selection != null)
 			{
-			/*
-				if ((selection.position - position).sqrMagnitude > selection.selectionRadius * selection.selectionRadius)
+				if (Convert(position) != prevPointer)
 				{
-					rangeIndicatorTransform.position = selection.position + Vector2.ClampMagnitude(position - selection.position, selection.movementRadius);
+					if (IsValidPosition(position, selection.position) && GameFlow.aStar.GeneratePath(Convert(position), selection.position, ref pathList, selection.movementBlock))
+					{
+						SetMeshColor(rangeMesh, Color.cyan);
+						GeneratePathMesh(pathMesh);
+						SetMeshColor(pathMesh, pathColor);
+					}
+					else
+					{
+						SetMeshColor(rangeMesh, Color.red);
+						GeneratePathMesh(pathMesh);
+						SetMeshColor(pathMesh, pathColor);
+					}
+					if (pathList.Count > 0)
+					{
+						rangeIndicatorTransform.position = (Vector2)pathList[pathList.Count - 1].position;
+					}
+					else
+					{
+						rangeIndicatorTransform.position = (Vector2)selection.position;
+					}
+					if (Convert(position) == selection.position)
+					{
+						pathMeshFilter.gameObject.SetActive(false);
+						rangeIndicatorTransform.position = (Vector2)selection.position;
+						pathList.Clear();
+					}
+					else
+					{
+						pathMeshFilter.gameObject.SetActive(true);
+					}
+						prevPointer = Convert(position);
 				}
-				else
-				{
-					rangeIndicatorTransform.position = (Vector2)selection.position;
-				}*/
-				if (IsValidPosition(Convert(position), selection.position) && GameFlow.aStar.GeneratePath(selection.position, Convert(position), ref pathList))
-				{
-					SetMeshColor(rangeMesh, Color.cyan);
-					GeneratePathMesh(selection.movementBlock);
-				}
-				else
-				{
-					SetMeshColor(rangeMesh, Color.red);
-				}
-				rangeIndicatorTransform.position = (Vector2)Convert(position);
 			}
-		}
-
-		private bool IsValidPosition(Vector2Int position,Vector2Int selection)
-		{
-			return validPosition[position.x, position.y] && (position.x != selection.x || position.y != selection.y);
 		}
 
 		public void KeyCanceled()
@@ -162,55 +185,20 @@ namespace Control
 			Select(selection);
 		}
 
+		private bool IsValidPosition(Vector2 position,Vector2Int selection)
+		{
+			return !GameFlow.map.GetObstacle((Convert(position))) && (Mathf.RoundToInt(position.x) != selection.x || Mathf.RoundToInt(position.y) != selection.y);
+		}
+
 		private Vector2Int Convert(Vector2 p)
 		{
 			return new Vector2Int(Mathf.RoundToInt(p.x), Mathf.RoundToInt(p.y));
 		}
-
-		private void GeneratePotentialMesh(Mesh m)
-		{
-			for (int i = 0; i < width; i++)
-			{
-				for (int j = 0; j < height; j++)
-				{
-					validPosition[i, j] = (GameFlow.map.potentialMap[i, j] != byte.MaxValue);
-				}
-			}
-			vertices.Clear();
-			triangles.Clear();
-			for (int i = 0; i < width; i++)
-			{
-				for (int j = 0; j < height; j++)
-				{
-					validPosition[i, j] = (GameFlow.map.potentialMap[i, j] != byte.MaxValue);
-					if (validPosition[i,j])
-					{
-						int c = vertices.Count;
-						triangles.Add(c + 0);
-						triangles.Add(c + 2);
-						triangles.Add(c + 1);
-						triangles.Add(c + 0);
-						triangles.Add(c + 3);
-						triangles.Add(c + 2);
-						vertices.Add(new Vector3(i - 0.5f, j - 0.5f));
-						vertices.Add(new Vector3(i + 0.5f, j - 0.5f));
-						vertices.Add(new Vector3(i + 0.5f, j + 0.5f));
-						vertices.Add(new Vector3(i - 0.5f, j + 0.5f));
-					}
-				}
-			}
-			m.Clear();
-			m.SetVertices(vertices);
-			m.SetTriangles(triangles,0);
-			m.RecalculateBounds();
-			m.RecalculateNormals();
-		}
 		
-		private void GenerateRangeMesh(Mesh m, float radius1, float radius2, int detail)
+		private void GenerateCircleMesh(Mesh m, float radius1, float radius2, int detail)
 		{
 			vertices.Clear();
 			triangles.Clear();
-			colorList.Clear();
 			for (int i = 0; i < detail; i++)
 			{
 				vertices.Add(new Vector3(Mathf.Sin((float)i * (Mathf.PI / (float)detail) * 2), Mathf.Cos((float)i * (Mathf.PI / (float)detail) * 2)) * radius1);
@@ -221,33 +209,31 @@ namespace Control
 				triangles.Add((i * 2 + 1) % (detail * 2));
 				triangles.Add((i * 2 + 3) % (detail * 2));
 				triangles.Add((i * 2 + 2) % (detail * 2));
-				colorList.Add(Color.white);
-				colorList.Add(Color.white);
 			}
 			m.SetVertices(vertices);
-			m.SetColors(colorList);
 			m.SetTriangles(triangles,0);
 			m.RecalculateNormals();
 			m.RecalculateBounds();
 		}
 
-		private void GeneratePathMesh(int blockLength)
+		private void GeneratePathMesh(Mesh m)
 		{
 			vertices.Clear();
 			triangles.Clear();
 			if (pathList.Count > 1)
 			{
-				int line = 0;
-				for (int i = pathList.Count - 2; i >= 0 && line < blockLength;i--)
+				for (int i = 0; i < pathList.Count-1;i++)
 				{
-					CreateLine(pathList[i], pathList[i + 1]);
+					CreateLine(pathList[i].position, pathList[i + 1].position);
 				}
 			}
+			pathMesh.Clear();
 			pathMesh.SetVertices(vertices);
 			pathMesh.SetTriangles(triangles, 0);
 			pathMesh.RecalculateNormals();
 			pathMesh.RecalculateBounds();
 		}
+
 		private void CreateLine(Vector2Int start,Vector2Int end)
 		{
 			if (end.x-start.x+end.y-start.y < 0)
@@ -278,11 +264,13 @@ namespace Control
 				vertices.Add(start + new Vector2(-pathWidth, pathWidth));
 			}
 		}
+
 		private void SetMeshColor(Mesh m,Color c)
 		{
-			for (int i = 0;i < colorList.Count;i++)
+			colorList.Clear();
+			for (int i = 0;i < m.vertexCount;i++)
 			{
-				colorList[i] = c;
+				colorList.Add(c);
 			}
 			m.SetColors(colorList);
 		}

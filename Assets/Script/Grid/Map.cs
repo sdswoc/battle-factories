@@ -12,7 +12,6 @@ namespace Grid
 		public bool[,] data;
 		public byte[,] potentialMap;
 		private Mesh mesh;
-		private List<Vector2Int> potentialPoints = new List<Vector2Int>();
 
 		private void Awake()
 		{
@@ -71,68 +70,39 @@ namespace Grid
 			}
 		}
 
-		public void GeneratePotential(Vector2Int position, int maxPotential)
+		public void RegisterObstacle(Vector2Int pos)
 		{
-			Debug.Log("Generated");
-			for (int i = 0; i < width; i++)
+			if (ValidatePosition(pos))
 			{
-				for (int j = 0; j < height; j++)
-				{
-					potentialMap[i, j] = byte.MaxValue;
-				}
+				data[pos.x, pos.y] = true;
 			}
-			if (ValidatePosition(position))
+		}
+		public void UnRegisterObstacle(Vector2Int pos)
+		{
+			if (ValidatePosition(pos))
 			{
-				SetPotential(position, 0);
+				data[pos.x, pos.y] = false;
 			}
-			potentialPoints.Clear();
-			potentialPoints.Add(position);
-			while (potentialPoints.Count > 0)
-			{
-				Vector2Int node = potentialPoints[0];
-				potentialPoints.RemoveAt(0);
-				if (ValidatePosition(node))
-				{
-					int nodeValue = GetPotential(node);
-					if (nodeValue < maxPotential)
-					{
-						SetPointPotential(node + Vector2Int.right, (byte)(nodeValue + 1));
-						SetPointPotential(node + Vector2Int.left, (byte)(nodeValue + 1));
-						SetPointPotential(node + Vector2Int.up, (byte)(nodeValue + 1));
-						SetPointPotential(node + Vector2Int.down, (byte)(nodeValue + 1));
-					}
-				}
-
-			}
-
 		}
 
-		private void SetPointPotential(Vector2Int position, byte potential)
+		public bool GetObstacle(Vector2Int position)
 		{
 			if (ValidatePosition(position))
 			{
-				if (!data[position.x, position.y])
-				{
-					if (GetPotential(position) == byte.MaxValue)
-					{
-						potentialPoints.Add(position);
-					}
-					SetPotential(position, potential);
-				}
-				
+				return data[position.x, position.y];
 			}
+			return true;			
 		}
-		private void SetPotential(Vector2Int position, byte potential)
+
+		public void MoveUnit(Vector2Int start,Vector2Int end)
 		{
-			if (potentialMap[position.x, position.y] > potential)
+			if (ValidatePosition(start) && ValidatePosition(end))
 			{
-				potentialMap[position.x, position.y] = potential;
+				data[start.x, start.y] = false;
+				data[end.x, end.y] = true;
 			}
 		}
-		private byte GetPotential(Vector2Int position)
-		{
-			return (potentialMap[position.x, position.y]);
-		}
+
 		private bool ValidatePosition(Vector2Int position)
 		{
 			if (position.x >= 0 && position.x < width)
@@ -144,17 +114,18 @@ namespace Grid
 			}
 			return false;
 		}
+
 		private void OnDrawGizmos()
 		{
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
 				{
-					if (potentialMap != null)
+					if (data != null)
 					{
-						if (potentialMap[i,j] != byte.MaxValue)
+						if (!data[i,j])
 						{
-							Gizmos.color = new Color(1,1,1,potentialMap[i,j]/255.0f);
+							Gizmos.color = Color.cyan;
 						}
 						else
 						{
@@ -166,7 +137,6 @@ namespace Grid
 						Gizmos.color = Color.cyan;
 					}
 					Gizmos.DrawCube(new Vector3(i, j), new Vector3(0.2f, 0.2f, 0));
-					
 				}
 			}
 		}

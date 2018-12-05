@@ -19,4 +19,5 @@ public class GameFlow
 	public static EventSystem eventSystem;
 	public static GraphicRaycaster graphicRaycaster;
 	public static AStar aStar;
+	public static EventHandle eventHandle;
 }

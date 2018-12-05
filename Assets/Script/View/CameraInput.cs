@@ -12,6 +12,7 @@ namespace View
 		public bool touchControl;
 		public float mouseMovementFactor;
 		public float mouseZoomFactor;
+		public float touchThreshold;
 
 		private PointerEventData pointerEventData;
 		private CameraControl cameraControl;
@@ -33,7 +34,7 @@ namespace View
 				touchControl = true;
 			}
 		}
-		
+
 		private void Update()
 		{
 			if (touchControl)
@@ -45,7 +46,7 @@ namespace View
 				MouseUpdate();
 			}
 		}
-		
+
 		private void TouchUpdate()
 		{
 			int count = Input.touchCount;
@@ -128,7 +129,7 @@ namespace View
 				upgradable = true;
 			}
 		}
-		
+
 		private void MouseUpdate()
 		{
 			Vector2 mousePosition = Input.mousePosition;
@@ -166,7 +167,7 @@ namespace View
 			cameraControl.UpdateControlPoints();
 			cameraControl.AdjustPosition();
 		}
-		
+
 		private bool OverlapTest(Vector2 position)
 		{
 			pointerEventData = new PointerEventData(GameFlow.eventSystem);
@@ -175,17 +176,17 @@ namespace View
 			GameFlow.graphicRaycaster.Raycast(pointerEventData, result);
 			return (result.Count > 0);
 		}
-		
+
 		private void TriggerPanStart(Vector2 position)
 		{
 			targetPosition = cameraControl.TransformCameraToWorld(position);
 		}
-		
+
 		private void TriggerZoomStart(float distance)
 		{
 			targetTouchDistance = distance;
 		}
-		
+
 		private void PanUpdate(Vector2 position)
 		{
 			Vector2 newTargetPosition = cameraControl.TransformCameraToWorld(position);
@@ -193,7 +194,7 @@ namespace View
 			cameraControl.UpdateControlPoints();
 			cameraControl.AdjustPosition();
 		}
-		
+
 		private void ZoomUpdate(float distance)
 		{
 			cameraControl.Zoom(distance - targetTouchDistance);
@@ -201,7 +202,7 @@ namespace View
 			cameraControl.UpdateControlPoints();
 			cameraControl.AdjustZoom();
 		}
-		
+
 		private void OnDrawGizmosSelected()
 		{
 			if (touchMode == TouchMode.Single)
@@ -214,10 +215,10 @@ namespace View
 				Gizmos.DrawWireSphere(cameraControl.TransformCameraToWorld(validFinger[i].position), 0.5f);
 			}
 		}
-	}
 
-	enum TouchMode
-	{
-		None, Single, Double
+		enum TouchMode
+		{
+			None, Single, Double
+		}
 	}
 }

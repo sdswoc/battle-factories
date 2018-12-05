@@ -17,16 +17,16 @@ public class AStar
 		this.height = height;
 	}
 
-	public bool GeneratePath(Vector2Int start,Vector2Int end,ref List<Vector2Int> path)
+	public bool GeneratePath(Vector2Int start,Vector2Int end,ref List<PathNode> path,int maxNode)
 	{
-		if (data[end.x,end.y])
+		if (start.x == end.x && start.y == end.y)
 		{
+			path.Clear();
 			return false;
 		}
 		openList.Clear();
 		closeList.Clear();
-		path.Clear();
-		openList.Add(new Node(0, 0,0,0, start.x, start.y,null));
+		openList.Add(new Node(0, 0, 0, 0, start.x, start.y, null));
 		Node solution = null;
 		while (openList.Count > 0)
 		{
@@ -38,10 +38,10 @@ public class AStar
 				solution = current;
 				break;
 			}
-			ProcessNode(current.x+1, current.y, end.x, end.y, current, 1);
-			ProcessNode(current.x, current.y+1, end.x, end.y, current, 2);
-			ProcessNode(current.x-1, current.y, end.x, end.y, current, 3);
-			ProcessNode(current.x, current.y-1, end.x, end.y, current, 4);
+			ProcessNode(current.x+1, current.y, start.x,start.y,end.x, end.y, current, 1);
+			ProcessNode(current.x, current.y+1, start.x, start.y, end.x, end.y, current, 2);
+			ProcessNode(current.x-1, current.y, start.x, start.y, end.x, end.y, current, 3);
+			ProcessNode(current.x, current.y-1, start.x, start.y, end.x, end.y, current, 4);
 			openList.Sort((y, x) =>
 			{
 				if (x.f != y.f)
@@ -50,21 +50,35 @@ public class AStar
 					return x.turn - y.turn;
 			});
 		}
+		bool isValid = solution != null;
+		if (solution == null)
+		{
+			Debug.Log("Impossible");
+		}
+		else
+		{
+			path.Clear();
+		}
+
+		int index = 0;
 		while (solution != null)
 		{
-			if (solution.parent != null)
+			path.Add(new PathNode(new Vector2Int(solution.x, solution.y),index));
+			index++;
+			maxNode--;
+			if (maxNode <= 0)
 			{
-				Debug.DrawLine(new Vector3(solution.x, solution.y), new Vector3(solution.parent.x, solution.parent.y), Color.yellow);
+				break;
 			}
-			path.Add(new Vector2Int(solution.x, solution.y));
 			solution = solution.parent;
 		}
-		return true;
+		SimplifyPath(ref path);
+		return isValid;
 	}
-	private void ProcessNode(int x,int y,int targetX,int targetY,Node parent,byte direction)
+	private void ProcessNode(int x,int y,int startX,int startY,int endX,int endY,Node parent,byte direction)
 	{
 		int index = -1;
-		if (GetObstacle(x,y) || Find(closeList,x,y,ref index) != null)
+		if (GetObstacle(x,y,startX,startY,endX,endY) || Find(closeList,x,y,ref index) != null)
 		{
 			return;
 		}
@@ -82,7 +96,7 @@ public class AStar
 			}
 			if (open == null)
 			{
-				openList.Add(new Node(direction, parent.g + 1, Mathf.Abs(targetX - x) + Mathf.Abs(targetY - y), parent.turn + penalty, x, y, parent));
+				openList.Add(new Node(direction, parent.g + 1, Mathf.Abs(endX - x) + Mathf.Abs(endY - y), parent.turn + penalty, x, y, parent));
 			}
 			else
 			{
@@ -90,13 +104,21 @@ public class AStar
 				{
 					open.parent = parent;
 					open.g = parent.g + 1;
-					open.f = open.g + Mathf.Abs(targetX - x) + Mathf.Abs(targetY - y);
+					open.f = open.g + Mathf.Abs(endX - x) + Mathf.Abs(endY - y);
 				}
 			}
 		}
 	}
-	private bool GetObstacle(int x,int y)
+	private bool GetObstacle(int x,int y,int startX,int startY,int endX,int endY)
 	{
+		if (x == startX && y == startY)
+		{
+			return false;
+		}
+		if (x == endX && y == endY)
+		{
+			return false;
+		}
 		if (x >= 0 && x < width)
 		{
 			if (y >= 0 && y < height)
@@ -118,8 +140,21 @@ public class AStar
 		}
 		return null;
 	}
+	private void SimplifyPath(ref List<PathNode> path)
+	{
+		for (int i = 1;i < path.Count-1;i++)
+		{
+			Vector2Int a = path[i + 1].position - path[i].position;
+			Vector2Int b = path[i].position - path[i - 1].position;
+			if (a.x*b.y-b.x*a.y == 0)
+			{
+				path.RemoveAt(i);
+				i--;
+			}
+		}
+	}
 }
-class Node
+public class Node
 {
 	public byte direction;
 	public int f;
@@ -138,5 +173,16 @@ class Node
 		this.f = g + h;
 		this.turn = turn;
 		this.parent = parent;
+	}
+}
+
+public class PathNode
+{
+	public Vector2Int position;
+	public int block;
+	public PathNode(Vector2Int position,int block)
+	{
+		this.position = position;
+		this.block = block;
 	}
 }
