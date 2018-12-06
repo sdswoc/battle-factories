@@ -2,7 +2,7 @@
 using UI;
 namespace Control
 {
-	public class ControlRelay : MonoBehaviour, IControl
+	public class ControlRelay : MonoBehaviour
 	{
 		public UIMode uiMode;
 
@@ -14,10 +14,14 @@ namespace Control
 		}
 		private void Start()
 		{
-			SetMode(uiMode);
+			GameFlow.SetMode(uiMode);
 		}
-		public void SetMode(UIMode mode)
+		public void SwitchUIMode(UIMode mode)
 		{
+			if (currentControl != null)
+			{
+				currentControl.SetActive(false);
+			}
 			if (mode == UIMode.Move)
 			{
 				currentControl = GameFlow.unitSelector;
@@ -26,12 +30,16 @@ namespace Control
 			{
 				currentControl = GameFlow.setupFactory;
 			}
-			GameFlow.uiPanelSwitcher.SwitchUIMode(mode);
+			if (currentControl != null)
+			{
+				currentControl.SetActive(true);
+			}
+			uiMode = mode;
 		}
 
 		public void KeyMoved(Vector2 position)
 		{
-			if (currentControl != null)
+			if (currentControl != null && currentControl.GetActive())
 			{
 				currentControl.KeyMoved(position);
 			}
@@ -39,7 +47,7 @@ namespace Control
 
 		public void KeyPressed(Vector2 position)
 		{
-			if (currentControl != null)
+			if (currentControl != null && currentControl.GetActive())
 			{
 				currentControl.KeyPressed(position);
 			}
@@ -47,7 +55,7 @@ namespace Control
 
 		public void KeyReleased(Vector2 position)
 		{
-			if (currentControl != null)
+			if (currentControl != null && currentControl.GetActive())
 			{
 				currentControl.KeyReleased(position);
 			}
@@ -55,7 +63,7 @@ namespace Control
 
 		public void KeyCanceled()
 		{
-			if (currentControl != null)
+			if (currentControl != null && currentControl.GetActive())
 			{
 				currentControl.KeyCanceled();
 			}

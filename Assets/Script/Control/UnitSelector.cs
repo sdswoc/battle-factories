@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Pathfinding;
 
 namespace Control
 {
@@ -31,6 +32,7 @@ namespace Control
 		private List<int> triangles = new List<int>();
 		private List<Color> colorList = new List<Color>();
 		private List<PathNode> pathList = new List<PathNode>();
+		private bool active;
 
 		private void Awake()
 		{
@@ -139,7 +141,7 @@ namespace Control
 
 		public void KeyMoved(Vector2 position)
 		{
-			if (selection != null)
+			if (selection != null && triggerReleaseEvent)
 			{
 				if (Convert(position) != prevPointer)
 				{
@@ -273,6 +275,26 @@ namespace Control
 				colorList.Add(c);
 			}
 			m.SetColors(colorList);
+		}
+
+		public bool GetActive()
+		{
+			return active;
+		}
+
+		public void SetActive(bool b)
+		{
+			active = b;
+			triggerReleaseEvent = false;
+			Select(null);
+			if (active)
+			{
+				gameObject.SetActive(true);
+			}
+			else
+			{
+				gameObject.SetActive(false);
+			}
 		}
 	}
 }

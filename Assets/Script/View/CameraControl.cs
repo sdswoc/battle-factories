@@ -61,6 +61,11 @@ namespace View
 					adjusted = true;
 				}
 			}
+			if (camera.orthographicSize < minZoomFactor || camera.orthographicSize > maxZoomFactor)
+			{
+				adjusted = true;
+				camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoomFactor, maxZoomFactor);
+			}
 			return adjusted;
 		}
 		

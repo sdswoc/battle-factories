@@ -7,6 +7,7 @@ using Control;
 using View;
 using UI;
 using Grid;
+using Pathfinding;
 public class GameFlow 
 {
 	public static UnitSelector unitSelector;
@@ -20,4 +21,13 @@ public class GameFlow
 	public static GraphicRaycaster graphicRaycaster;
 	public static AStar aStar;
 	public static EventHandle eventHandle;
+	public static Factory friendlyFactory;
+	public static Factory enemyFactory;
+	public static UIMode uiMode;
+	public static void SetMode(UIMode mode)
+	{
+		uiPanelSwitcher.SwitchUIMode(mode);
+		controlRelay.SwitchUIMode(mode);
+		uiMode = mode;
+	}
 }

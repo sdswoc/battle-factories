@@ -23,6 +23,9 @@ namespace View
 		private TouchMode touchMode = TouchMode.None;
 		private bool upgradable = true;
 		private Vector2 moveAxis;
+		private float cameraZoomVelocity;
+		private float cameraZoomTargetSize;
+		private float cameraZoomCurrentSize;
 
 		private void Awake()
 		{
@@ -33,6 +36,8 @@ namespace View
 			{
 				touchControl = true;
 			}
+			cameraZoomVelocity = 0;
+			cameraZoomTargetSize = cameraZoomCurrentSize = camera.orthographicSize;
 		}
 
 		private void Update()
@@ -44,6 +49,10 @@ namespace View
 			else
 			{
 				MouseUpdate();
+			}
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				GameFlow.SetMode((UIMode)(((int)GameFlow.uiMode+1)%2));
 			}
 		}
 
@@ -133,7 +142,10 @@ namespace View
 		private void MouseUpdate()
 		{
 			Vector2 mousePosition = Input.mousePosition;
-			if (Input.GetMouseButtonDown(0))
+			bool lmb = Input.GetMouseButton(0);
+			bool rmb = Input.GetMouseButton(1);
+			int scroll = -Mathf.RoundToInt(Input.mouseScrollDelta.y);
+			if (Input.GetMouseButtonDown(0) && !rmb)
 			{
 				if (!OverlapTest(mousePosition))
 				{
@@ -142,7 +154,7 @@ namespace View
 					upgradable = false;
 				}
 			}
-			else if (Input.GetMouseButton(0))
+			else if (lmb)
 			{
 				if (!upgradable)
 				{
@@ -160,10 +172,36 @@ namespace View
 				}
 				upgradable = true;
 			}
-			cameraControl.Zoom(Input.GetAxis("Zoom") * mouseZoomFactor * Time.deltaTime * camera.orthographicSize);
-			cameraControl.Translate(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * mouseMovementFactor * camera.orthographicSize * Time.deltaTime);
+			if (Input.GetMouseButtonDown(1))
+			{
+				TriggerPanStart(mousePosition);
+			}
+			else if (rmb)
+			{
+				PanUpdate(mousePosition);
+			}
+			if (Input.GetKeyDown(KeyCode.KeypadPlus))
+			{
+				cameraZoomTargetSize += mouseZoomFactor * camera.orthographicSize;
+			}
+			if (Input.GetKeyDown(KeyCode.KeypadMinus))
+			{
+				cameraZoomTargetSize -= mouseZoomFactor * camera.orthographicSize;
+			}
+			cameraZoomTargetSize += scroll * mouseZoomFactor*camera.orthographicSize;
+			cameraZoomCurrentSize = Mathf.SmoothDamp(cameraZoomCurrentSize, cameraZoomTargetSize, ref cameraZoomVelocity, 0.2f);
+			camera.orthographicSize = (cameraZoomCurrentSize);
+			if (!rmb)
+			{
+				cameraControl.Translate(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * mouseMovementFactor * camera.orthographicSize * Time.deltaTime);
+			}
 			cameraControl.UpdateControlPoints();
-			cameraControl.AdjustZoom();
+			if (cameraControl.AdjustZoom())
+			{
+				cameraZoomTargetSize = cameraZoomCurrentSize = camera.orthographicSize;
+
+				Debug.Log(Input.mouseScrollDelta.y);
+			}
 			cameraControl.UpdateControlPoints();
 			cameraControl.AdjustPosition();
 		}

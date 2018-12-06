@@ -2,46 +2,155 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Control;
+using UnityEngine.UI;
 
 public class SetupFactory : MonoBehaviour, IControl
 {
-	public new Transform transform;
+	public Factory factory;
+	public Button okButton;
+	public int detail;
+	public float circleRadius;
+	public float stripWidth;
+	public Color goodColor;
+	public Color badColor;
 
+	private bool good;
 	private bool invokeReleaseEvent = false;
-	private Vector2 prevPosition;
-	private Vector2 currentPosition;
+	private Vector2Int prevPosition;
+	private Vector2Int currentPosition;
+	private Mesh mesh;
+	private new Transform transform;
+	private bool active;
 
 	private void Awake()
 	{
+		transform = GetComponent<Transform>();
 		GameFlow.setupFactory = this;
+		GameFlow.friendlyFactory = factory;
+		mesh = new Mesh();
+		GetComponent<MeshFilter>().mesh = mesh;
+		GenerateCircleMesh(mesh, circleRadius, circleRadius + stripWidth, detail);
+
+		factory.MoveToPosition(factory.position);
+		GUIUpdate();
 	}
 	public void KeyCanceled()
 	{
 		invokeReleaseEvent = false;
-		transform.position = prevPosition;
+		factory.MoveToPosition(prevPosition);
+		transform.position = (Vector2)prevPosition;
+		GUIUpdate();
 	}
-
 	public void KeyMoved(Vector2 position)
 	{
-		transform.position = position;
+		if (invokeReleaseEvent)
+		{
+			factory.MoveToPosition(Convert(position));
+			transform.position = (Vector2)Convert(position);
+			GUIUpdate();
+		}
 	}
-
 	public void KeyPressed(Vector2 position)
 	{
 		invokeReleaseEvent = true;
-		transform.position = position;
+		factory.MoveToPosition(Convert(position));
+		transform.position = (Vector2)Convert(position);
+		GUIUpdate();
 	}
-
 	public void KeyReleased(Vector2 position)
 	{
 		if (invokeReleaseEvent)
 		{
-			prevPosition = transform.position;
+			factory.MoveToPosition(Convert(position));
+			if (factory.EvaluatePosition())
+			{
+				prevPosition = factory.position;
+				transform.position = (Vector2)Convert(position);
+			}
+			else
+			{
+				factory.MoveToPosition(prevPosition);
+				transform.position = (Vector2)prevPosition;
+			}
+			GUIUpdate();
 		}
 	}
-
 	public void OnOKButton()
 	{
-		
+		EventHandle.SetFriendlyFactory(prevPosition);
+	}
+	private void GUIUpdate()
+	{
+		bool good = factory.EvaluatePosition();
+		SetCircle(good);
+		okButton.interactable = good;
+	}
+	private void SetCircle(bool good)
+	{
+		if (good)
+		{
+			SetMeshColor(mesh, goodColor);
+		}
+		else
+		{
+			SetMeshColor(mesh, badColor);
+		}
+	}
+	private Vector2Int Convert(Vector2 p)
+	{
+		return new Vector2Int(Mathf.RoundToInt(p.x), Mathf.RoundToInt(p.y));
+	}
+	private void GenerateCircleMesh(Mesh m, float radius1, float radius2, int detail)
+	{
+		List<Vector3> vertices = new List<Vector3>();
+		List<int> triangles = new List<int>();
+		for (int i = 0; i < detail; i++)
+		{
+			vertices.Add(new Vector3(Mathf.Sin((float)i * (Mathf.PI / (float)detail) * 2), Mathf.Cos((float)i * (Mathf.PI / (float)detail) * 2)) * radius1);
+			vertices.Add(new Vector3(Mathf.Sin((float)i * (Mathf.PI / (float)detail) * 2), Mathf.Cos((float)i * (Mathf.PI / (float)detail) * 2)) * (radius2));
+			triangles.Add((i * 2 + 0) % (detail * 2));
+			triangles.Add((i * 2 + 1) % (detail * 2));
+			triangles.Add((i * 2 + 2) % (detail * 2));
+			triangles.Add((i * 2 + 1) % (detail * 2));
+			triangles.Add((i * 2 + 3) % (detail * 2));
+			triangles.Add((i * 2 + 2) % (detail * 2));
+		}
+		m.SetVertices(vertices);
+		m.SetTriangles(triangles, 0);
+		m.RecalculateNormals();
+		m.RecalculateBounds();
+	}
+	private void SetMeshColor(Mesh m, Color c)
+	{
+		List<Color> colorList = new List<Color>();
+		for (int i = 0; i < m.vertexCount; i++)
+		{
+			colorList.Add(c);
+		}
+		m.SetColors(colorList);
+	}
+
+	public bool GetActive()
+	{
+		return active;
+	}
+
+	public void SetActive(bool b)
+	{
+		active = b;
+		invokeReleaseEvent = false;
+		if (active)
+		{
+			factory.MoveToPosition(factory.position);
+			GUIUpdate();
+			gameObject.SetActive(true);
+		}
+		else
+		{
+			factory.MoveToPosition(prevPosition);
+			transform.position = (Vector2)prevPosition;
+			GUIUpdate();
+			gameObject.SetActive(false);
+		}
 	}
 }

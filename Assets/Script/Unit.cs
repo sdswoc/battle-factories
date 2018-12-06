@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using Pathfinding;
 
 public class Unit : MonoBehaviour 
 {
@@ -75,7 +76,7 @@ public class Unit : MonoBehaviour
 
 	private IEnumerator FollowPath()
 	{
-		if (path.Count > 2)
+		if (path.Count > 1)
 		{
 			int index = 0;
 			selectable = false;
