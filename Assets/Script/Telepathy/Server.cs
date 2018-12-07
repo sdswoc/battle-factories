@@ -16,6 +16,7 @@ namespace Telepathy
         SafeDictionary<int, TcpClient> clients = new SafeDictionary<int, TcpClient>();
 
         public bool NoDelay = true;
+		public Action<string,int> ListenerStarted;
 
         // connectionId counter
         // (right now we only use it from one listener thread, but we might have
@@ -60,8 +61,26 @@ namespace Telepathy
             return null;
         }
 
-        // the listener thread's listen function
-        void Listen(int port, int maxConnections)
+		public string GetLocalIPAddress()
+		{
+			try
+			{
+				string localIP;
+				using (Socket socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+				{
+					socket.Connect("8.8.8.8", 0);
+					IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+					localIP = endPoint.Address.ToString();
+				}
+				return localIP;
+			}
+			catch (Exception e)
+			{
+				return "127.0.0.1";
+			}
+		}
+		// the listener thread's listen function
+		void Listen(int port, int maxConnections)
         {
             // absolutely must wrap with try/catch, otherwise thread
             // exceptions are silent
@@ -74,9 +93,11 @@ namespace Telepathy
                 listener.Server.NoDelay = this.NoDelay;
                 listener.Start();
                 Logger.Log("Server: listening port=" + port + " max=" + maxConnections);
+				IPEndPoint ipend = ((IPEndPoint)(listener.LocalEndpoint));
+				ListenerStarted?.Invoke(GetLocalIPAddress(), ipend.Port);
 
-                // keep accepting new clients
-                while (true)
+				// keep accepting new clients
+				while (true)
                 {
                     // wait and accept new client
                     // note: 'using' sucks here because it will try to
@@ -233,13 +254,5 @@ namespace Telepathy
             return false;
         }
 
-		public IPEndPoint GetListenerEndPoint()
-		{
-			if (listener != null)
-			{
-				return (IPEndPoint)(listener.LocalEndpoint);
-			}
-			return null;
-		}
     }
 }

@@ -26,7 +26,6 @@ public class SetupFactory : MonoBehaviour, IControl
 	{
 		transform = GetComponent<Transform>();
 		GameFlow.setupFactory = this;
-		GameFlow.friendlyFactory = factory;
 		mesh = new Mesh();
 		GetComponent<MeshFilter>().mesh = mesh;
 		GenerateCircleMesh(mesh, circleRadius, circleRadius + stripWidth, detail);

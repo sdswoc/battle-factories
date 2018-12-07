@@ -25,7 +25,6 @@ public class Unit : MonoBehaviour
 		position = new Vector2Int(Mathf.RoundToInt(transform.position.x),Mathf.RoundToInt(transform.position.y));
 		transform.position = (Vector2)position;
 		path = new List<PathNode>();
-		Spawn(position, type);
 	}
 
 
@@ -38,10 +37,11 @@ public class Unit : MonoBehaviour
 		Gizmos.DrawWireSphere(GetComponent<Transform>().position, selectionRadius);
 	}
 	
-	public void Spawn(Vector2Int position,UnitType type)
+	public void Spawn(Vector2Int position,UnitType type,int id)
 	{
 		this.position = position;
 		this.type = type;
+		unitID = id;
 		transform.position = (Vector2)position;
 		units.Add(this);
 		GameFlow.map.RegisterObstacle(position);

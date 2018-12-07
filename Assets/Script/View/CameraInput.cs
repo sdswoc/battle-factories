@@ -199,8 +199,6 @@ namespace View
 			if (cameraControl.AdjustZoom())
 			{
 				cameraZoomTargetSize = cameraZoomCurrentSize = camera.orthographicSize;
-
-				Debug.Log(Input.mouseScrollDelta.y);
 			}
 			cameraControl.UpdateControlPoints();
 			cameraControl.AdjustPosition();

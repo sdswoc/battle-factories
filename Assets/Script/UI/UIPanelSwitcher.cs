@@ -27,7 +27,6 @@ namespace UI
 
 		private IEnumerator SwitchPanel(RectTransform prevPanel, RectTransform newPanel)
 		{
-			Debug.Log("Switch");
 			if (newPanel != null)
 			{
 				newPanel.gameObject.SetActive(false);

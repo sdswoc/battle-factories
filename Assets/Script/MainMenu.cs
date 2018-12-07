@@ -7,7 +7,6 @@ using Multiplayer;
 using Telepathy;
 using UnityEngine.SceneManagement;
 using BeaconLib;
-using System.Net;
 
 public class MainMenu : MonoBehaviour 
 {
@@ -17,89 +16,42 @@ public class MainMenu : MonoBehaviour
 	public Common common;
 	public Beacon beacon;
 	public Probe probe;
+	private string textField = "";
 	
 	public void StartServer()
 	{
-		Transport.server = new Server();
-		Transport.client = null;
-		Transport.socketMode = SocketMode.Server;
-		common = Transport.server;
-		Transport.server.Start(0);
-		SetLogger();
+		Socket.OnConnected += SwitchScene;
+		Socket.OnListenerStarted += OnListenerStarted;
+		text.text = Socket.StartServer();
+		
 	}
 	public void StartClient()
 	{
-		Transport.server = null;
-		Transport.client = new Client();
-		common = Transport.client;
-		Transport.socketMode = SocketMode.Client;
-		SetLogger();
-		probe = new Probe("battle-factories");
-		probe.BeaconsUpdated += OnProbeFind;
-		probe.Start();
+		Socket.OnConnected += SwitchScene;
+		if (input.text == "")
+		{
+			Socket.StartProbe();
+		}
+		else
+		{
+			Socket.StartClient(input.text.Split(':')[0], int.Parse(input.text.Split(':')[1]));
+		}
 	}
 	public void SwitchScene()
 	{
+		Socket.OnConnected -= SwitchScene;
 		SceneManager.LoadScene("SampleScene");
-	}
-	public void SetLogger()
-	{
-		Telepathy.Logger.LogMethod = Debug.Log;
-		Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
-		Telepathy.Logger.LogErrorMethod = Debug.LogError;
-	}
-	private void OnProbeFind(IEnumerable<BeaconLocation> locations)
-	{
-		foreach (var beacon in locations)
-		{
-			if (Transport.client != null)
-			{
-				Transport.client.Connect(beacon.Address.Address.MapToIPv4().ToString(), int.Parse(beacon.Data));
-				Debug.Log("Connected");
-				break;
-			}
-		}
 	}
 	private void Update()
 	{
-		if (Transport.server != null)
+		Socket.Update();
+		if (!text.text.Equals(textField))
 		{
-			if (Transport.server.GetListenerEndPoint() != null)
-			{
-				if (beacon == null)
-				{
-					beacon = new Beacon("battle-factories", (ushort)((IPEndPoint)Transport.server.GetListenerEndPoint()).Port);
-					beacon.BeaconData = ((ushort)((IPEndPoint)Transport.server.GetListenerEndPoint()).Port).ToString();
-					beacon.Start();
-					text.text = "Beacon started";
-					Debug.Log("Started beacon @ " + ((ushort)((IPEndPoint)Transport.server.GetListenerEndPoint()).Port).ToString());
-				}
-			}
+			text.text = textField;
 		}
-		if (common != null)
-		{
-			Message msg;
-			if (common.GetNextMessage(out msg))
-			{
-				if (msg.eventType == Telepathy.EventType.Connected)
-				{
-					Transport.connectionId = msg.connectionId;
-					if (beacon != null)
-					{
-						beacon.Stop();
-						beacon.Dispose();
-						beacon = null;
-					}
-					if (probe != null)
-					{
-						probe.Stop();
-						probe.Dispose();
-						probe = null;
-					}
-					SwitchScene();
-				}
-			}
-		}
-
+	}
+	public void OnListenerStarted(string s,int p)
+	{
+		textField = s + ":" + p.ToString();
 	}
 }

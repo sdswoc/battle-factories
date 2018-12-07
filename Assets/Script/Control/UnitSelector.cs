@@ -130,7 +130,7 @@ namespace Control
 					{
 						if (IsValidPosition(position, selection.position))
 						{
-							selection.Move(pathList);
+							EventHandle.MoveFriendlyUnit(selection.unitID, pathList[pathList.Count - 1].position, selection.position);
 							Debug.Log("Move");
 						}
 					}

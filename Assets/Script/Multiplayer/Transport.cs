@@ -6,26 +6,28 @@ namespace Multiplayer
 {
 	public class Transport : MonoBehaviour
 	{
-		public static Server server;
-		public static Client client;
-		public static SocketMode socketMode;
-		public static int connectionId;
-		public void CloseConnections()
+		private void Awake()
 		{
-			if (server != null)
-			{
-				server.Stop();
-				server = null;
-			}
-			if (client != null)
-			{
-				client.Disconnect();
-				client = null;
-			}
+			Socket.OnData += DataEvent;
+			Socket.OnDisconnected += DisconnectEvent;
+		}
+		private void Update()
+		{
+			Socket.Update();
 		}
 		private void OnApplicationQuit()
 		{
-			CloseConnections();
+			Socket.StopClient();
+			Socket.StopServer();
+		}
+		private void DisconnectEvent()
+		{
+			Application.Quit();
+		}
+		private void DataEvent(Packet packet)
+		{
+			Debug.Log("Data recieved");
+			NetworkEventRecieve.RecieveEvent(packet);
 		}
 	}
 	public enum SocketMode

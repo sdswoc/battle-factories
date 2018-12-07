@@ -21,6 +21,12 @@ public class Packet
 		}
 	}
 
+	public Packet(byte b)
+	{
+		data = new List<byte>();
+		WriteByte(b);
+	}
+
 	public byte ReadByte()
 	{
 		if (data.Count > 0)
