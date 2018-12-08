@@ -239,7 +239,7 @@ namespace View
 			cameraControl.AdjustZoom();
 		}
 
-		private void OnDrawGizmosSelected()
+		private void OnDrawGizmos()
 		{
 			if (touchMode == TouchMode.Single)
 				Gizmos.color = Color.red;

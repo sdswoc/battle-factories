@@ -40,17 +40,20 @@ namespace Pathfinding
 					solution = current;
 					break;
 				}
-				ProcessNode(current.x + 1, current.y, start.x, start.y, end.x, end.y, current, 1);
-				ProcessNode(current.x, current.y + 1, start.x, start.y, end.x, end.y, current, 2);
-				ProcessNode(current.x - 1, current.y, start.x, start.y, end.x, end.y, current, 3);
-				ProcessNode(current.x, current.y - 1, start.x, start.y, end.x, end.y, current, 4);
-				openList.Sort((y, x) =>
+				if (current.g <= maxNode)
 				{
-					if (x.f != y.f)
-						return x.f - y.f;
-					else
-						return x.turn - y.turn;
-				});
+					ProcessNode(current.x + 1, current.y, start.x, start.y, end.x, end.y, current, 1);
+					ProcessNode(current.x, current.y + 1, start.x, start.y, end.x, end.y, current, 2);
+					ProcessNode(current.x - 1, current.y, start.x, start.y, end.x, end.y, current, 3);
+					ProcessNode(current.x, current.y - 1, start.x, start.y, end.x, end.y, current, 4);
+					openList.Sort((y, x) =>
+					{
+						if (x.f != y.f)
+							return x.f - y.f;
+						else
+							return x.turn - y.turn;
+					});
+				}
 			}
 			bool isValid = solution != null;
 			if (solution == null)

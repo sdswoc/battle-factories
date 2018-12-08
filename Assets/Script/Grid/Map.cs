@@ -11,7 +11,6 @@ namespace Grid
 		public int height;
 		public int cellSize;
 		public bool[,] data;
-		public byte[,] potentialMap;
 		private Mesh mesh;
 
 		private void Awake()
@@ -20,7 +19,7 @@ namespace Grid
 			GetComponent<MeshFilter>().mesh = GenerateMesh();
 			data = new bool[width, height];
 			GameFlow.aStar = new AStar(ref data, width, height);
-			potentialMap = new byte[width, height];
+			GameFlow.potentialMap = new PotentialMap(width, height);
 		}
 
 		private Mesh GenerateMesh()

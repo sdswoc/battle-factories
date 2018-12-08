@@ -30,6 +30,10 @@ namespace Control
 			{
 				currentControl = GameFlow.setupFactory;
 			}
+			else
+			{
+				currentControl = null;
+			}
 			if (currentControl != null)
 			{
 				currentControl.SetActive(true);
@@ -74,6 +78,6 @@ namespace Control
 
 	public enum UIMode
 	{
-		Setup = 0,Move = 1,EnemyMove = 2,Fire = 3
+		Setup = 0,Move = 1,EnemyWait = 2,Fire = 3
 	}
 }

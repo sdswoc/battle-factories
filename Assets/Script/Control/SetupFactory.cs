@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Control;
 using UnityEngine.UI;
-
+using Multiplayer;
 public class SetupFactory : MonoBehaviour, IControl
 {
 	public Factory factory;
@@ -13,6 +13,8 @@ public class SetupFactory : MonoBehaviour, IControl
 	public float stripWidth;
 	public Color goodColor;
 	public Color badColor;
+	public Vector2Int serverFactoryPosition;
+	public Vector2Int clientFactoryPosition;
 
 	private bool good;
 	private bool invokeReleaseEvent = false;
@@ -29,9 +31,17 @@ public class SetupFactory : MonoBehaviour, IControl
 		mesh = new Mesh();
 		GetComponent<MeshFilter>().mesh = mesh;
 		GenerateCircleMesh(mesh, circleRadius, circleRadius + stripWidth, detail);
-
-		factory.MoveToPosition(factory.position);
 		GUIUpdate();
+		if (Socket.socketType == SocketType.Server)
+		{
+			factory.MoveToPosition(serverFactoryPosition);
+			prevPosition = serverFactoryPosition;
+		}
+		else
+		{
+			factory.MoveToPosition(clientFactoryPosition);
+			prevPosition = clientFactoryPosition;
+		}
 	}
 	public void KeyCanceled()
 	{
@@ -136,6 +146,7 @@ public class SetupFactory : MonoBehaviour, IControl
 
 	public void SetActive(bool b)
 	{
+		Debug.Log("SetActive " + b.ToString());
 		active = b;
 		invokeReleaseEvent = false;
 		if (active)

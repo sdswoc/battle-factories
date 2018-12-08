@@ -34,7 +34,7 @@ namespace UI
 			if (prevPanel != null)
 			{
 				prevPanel.gameObject.SetActive(true);
-				for (float i = 0; i < 1; i += Time.deltaTime)
+				for (float i = 0; i < 1; i += Time.deltaTime*8)
 				{
 					prevPanel.anchorMax = Vector2.right + Vector2.up * (1 - i);
 					prevPanel.anchorMin = Vector2.up * -i;
@@ -45,7 +45,7 @@ namespace UI
 			if (newPanel != null)
 			{
 				newPanel.gameObject.SetActive(true);
-				for (float i = 0; i < 1; i += Time.deltaTime)
+				for (float i = 0; i < 1; i += Time.deltaTime*8)
 				{
 					newPanel.anchorMax = Vector2.right + Vector2.up * i;
 					newPanel.anchorMin = Vector2.up * (-1 + i);

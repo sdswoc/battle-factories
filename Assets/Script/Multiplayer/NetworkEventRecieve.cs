@@ -24,10 +24,35 @@ namespace Multiplayer
 			EventHandle.MoveEnemyUnit(id, from, to);
 		}
 
+		// Code = 4
+		public static void SetTurn(bool myTurn)
+		{
+			EventHandle.SetTurn(myTurn);
+		}
+
+		// Code = 5
+		public static void TurnFinish()
+		{
+			EventHandle.FinishTurnRemote();
+		}
+
+		// Code = 6
+		public static void HPSync(Packet p)
+		{
+			int size = p.ReadInt();
+			Vector2Int[] data = new Vector2Int[size];
+			for (int i = 0;i < size;i++)
+			{
+				data[i].x = p.ReadInt();
+				data[i].y = p.ReadInt();
+			}
+			EventHandle.SyncHP(data);
+		}
+
 		public static void RecieveEvent(Packet p)
 		{
 			byte opCode = p.ReadByte();
-			Debug.Log("OPCode is " + opCode.ToString());
+			Debug.Log("OPCode recieved " + opCode.ToString());
 			switch (opCode)
 			{
 				case 1:
@@ -38,6 +63,15 @@ namespace Multiplayer
 					break;
 				case 3:
 					MoveUnit(p.ReadInt(), new Vector2Int(p.ReadInt(), p.ReadInt()), new Vector2Int(p.ReadInt(), p.ReadInt()));
+					break;
+				case 4:
+					SetTurn(p.ReadByte() != 0);
+					break;
+				case 5:
+					TurnFinish();
+					break;
+				case 6:
+					HPSync(p);
 					break;
 			}
 

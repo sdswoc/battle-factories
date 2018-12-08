@@ -9,8 +9,11 @@ public class Factory : MonoBehaviour
 	public Vector2Int position;
 	public UnitType type;
 	public GameObject[] units;
-	private bool established;
+	public Vector2Int serverFactoryPosition;
+	public Vector2Int clientFactoryPosition;
+	public bool established;
 	private static int idGeneratorIndex;
+
 
 	private void Awake()
 	{
@@ -21,11 +24,16 @@ public class Factory : MonoBehaviour
 		else
 		{
 			GameFlow.enemyFactory = this;
+			gameObject.SetActive(false);
 		}
-	}
-	private void Start()
-	{
-		CreateUnit(0);
+		if (Socket.socketType == SocketType.Server)
+		{
+			MoveToPosition(serverFactoryPosition);
+		}
+		else
+		{
+			MoveToPosition(clientFactoryPosition);
+		}
 	}
 	public void MoveToPosition(Vector2Int position)
 	{
@@ -48,6 +56,20 @@ public class Factory : MonoBehaviour
 					good = false;
 					break;
 				}
+			}
+		}
+		if (Socket.socketType == SocketType.Server)
+		{
+			if (rectangle.position.y <= 0 || rectangle.position.y+rectangle.size.y > GameFlow.map.height/2)
+			{
+				good = false;
+			}
+		}
+		else
+		{
+			if (rectangle.position.y <= GameFlow.map.height/2 || rectangle.position.y + rectangle.size.y > GameFlow.map.height)
+			{
+				good = false;
 			}
 		}
 		return good;

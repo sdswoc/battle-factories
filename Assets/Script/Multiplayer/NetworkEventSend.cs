@@ -37,5 +37,41 @@ namespace Multiplayer
 			p.WriteInt(to.y);
 			Socket.Send(p);
 		}
+
+		// Code = 4
+		public static void SetTurn(bool myTurn)
+		{
+			Packet p = new Packet(4);
+			if (myTurn)
+			{
+				p.WriteByte(1);
+			}
+			else
+			{
+				p.WriteByte(0);
+			}
+			Socket.Send(p);
+		}
+
+		// Code = 5
+		public static void TurnFinish()
+		{
+			Debug.Log("send turn finish");
+			Packet p = new Packet(5);
+			Socket.Send(p);
+		}
+
+		// Code = 6
+		public static void HPSync(Vector2Int[] data)
+		{
+			Packet p = new Packet(6);
+			p.WriteInt(Unit.units.Count);
+			for (int i = 0;i < Unit.units.Count;i++)
+			{
+				p.WriteInt(Unit.units[i].unitID);
+				p.WriteInt(Unit.units[i].hp);
+			}
+			Socket.Send(p);
+		}
 	}
 }

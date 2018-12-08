@@ -14,6 +14,7 @@ public class Unit : MonoBehaviour
 	public Vector2Int position;
 	public bool selectable;
 	public int unitID;
+	public int hp;
 	private new Transform transform;
 	private List<PathNode> path;
 	public static List<Unit> units = new List<Unit>();
@@ -25,6 +26,7 @@ public class Unit : MonoBehaviour
 		position = new Vector2Int(Mathf.RoundToInt(transform.position.x),Mathf.RoundToInt(transform.position.y));
 		transform.position = (Vector2)position;
 		path = new List<PathNode>();
+		Spawn(position, UnitType.Friendly, 5);
 	}
 
 

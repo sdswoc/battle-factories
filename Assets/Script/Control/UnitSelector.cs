@@ -89,6 +89,8 @@ namespace Control
 				movementMeshFilter.gameObject.SetActive(true);
 				rangeMeshFilter.gameObject.SetActive(true);
 				pathMeshFilter.gameObject.SetActive(true);
+
+				GameFlow.potentialMap.GeneratePotential(unit.position, (byte)unit.movementBlock);
 				
 				GenerateCircleMesh(movementMesh, unit.movementBlock, unit.movementBlock + stripWidth, circleDetailMedium);
 				SetMeshColor(movementMesh, movementColor);
@@ -128,9 +130,9 @@ namespace Control
 				{
 					if (pathList.Count > 0)
 					{
-						if (IsValidPosition(position, selection.position))
+						if (IsValidPosition(GameFlow.potentialMap.GetNearestPoint(prevPointer), selection.position))
 						{
-							EventHandle.MoveFriendlyUnit(selection.unitID, pathList[pathList.Count - 1].position, selection.position);
+							EventHandle.MoveFriendlyUnit(selection.unitID, prevPointer, selection.position);
 							Debug.Log("Move");
 						}
 					}
@@ -143,9 +145,10 @@ namespace Control
 		{
 			if (selection != null && triggerReleaseEvent)
 			{
-				if (Convert(position) != prevPointer)
+				Vector2Int effectivePosition = GameFlow.potentialMap.GetNearestPoint(Convert(position));
+				if (effectivePosition != prevPointer)
 				{
-					if (IsValidPosition(position, selection.position) && GameFlow.aStar.GeneratePath(Convert(position), selection.position, ref pathList, selection.movementBlock))
+					if (IsValidPosition(effectivePosition, selection.position) && GameFlow.aStar.GeneratePath(effectivePosition, selection.position, ref pathList, selection.movementBlock))
 					{
 						SetMeshColor(rangeMesh, Color.cyan);
 						GeneratePathMesh(pathMesh);
@@ -165,7 +168,7 @@ namespace Control
 					{
 						rangeIndicatorTransform.position = (Vector2)selection.position;
 					}
-					if (Convert(position) == selection.position)
+					if (effectivePosition == selection.position)
 					{
 						pathMeshFilter.gameObject.SetActive(false);
 						rangeIndicatorTransform.position = (Vector2)selection.position;
@@ -175,7 +178,7 @@ namespace Control
 					{
 						pathMeshFilter.gameObject.SetActive(true);
 					}
-						prevPointer = Convert(position);
+					prevPointer = effectivePosition;
 				}
 			}
 		}
@@ -187,9 +190,9 @@ namespace Control
 			Select(selection);
 		}
 
-		private bool IsValidPosition(Vector2 position,Vector2Int selection)
+		private bool IsValidPosition(Vector2Int position,Vector2Int selection)
 		{
-			return !GameFlow.map.GetObstacle((Convert(position))) && (Mathf.RoundToInt(position.x) != selection.x || Mathf.RoundToInt(position.y) != selection.y);
+			return !GameFlow.map.GetObstacle(position) && (position != selection);
 		}
 
 		private Vector2Int Convert(Vector2 p)

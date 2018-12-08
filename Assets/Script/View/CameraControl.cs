@@ -40,37 +40,40 @@ namespace View
 		public bool AdjustZoom()
 		{
 			bool adjusted = false;
-			float spanWidth, spanHeight, constrainWidth, constrainHeight;
-			spanWidth = maxPoint.x - minPoint.x;
-			spanHeight = maxPoint.y - minPoint.y;
-			constrainWidth = GameFlow.map.GetCameraWidth();
-			constrainHeight = GameFlow.map.GetCameraHeight();
-			if (spanWidth / spanHeight > constrainWidth / constrainHeight)
-			{
-				if (spanWidth > constrainWidth)
+			/*
+				
+				float spanWidth, spanHeight, constrainWidth, constrainHeight;
+				spanWidth = maxPoint.x - minPoint.x;
+				spanHeight = maxPoint.y - minPoint.y;
+				constrainWidth = GameFlow.map.GetCameraWidth();
+				constrainHeight = GameFlow.map.GetCameraHeight();
+				if (spanWidth / spanHeight > constrainWidth / constrainHeight)
 				{
-					camera.orthographicSize *= constrainWidth / spanWidth;
-					adjusted = true;
+					if (spanWidth > constrainWidth)
+					{
+						camera.orthographicSize *= constrainWidth / spanWidth;
+						adjusted = true;
+					}
 				}
-			}
-			else
-			{
-				if (spanHeight > constrainHeight)
+				else
 				{
-					camera.orthographicSize *= constrainHeight / spanHeight;
-					adjusted = true;
+					if (spanHeight > constrainHeight)
+					{
+						camera.orthographicSize *= constrainHeight / spanHeight;
+						adjusted = true;
+					}
 				}
-			}
+				*/
 			if (camera.orthographicSize < minZoomFactor || camera.orthographicSize > maxZoomFactor)
-			{
-				adjusted = true;
-				camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoomFactor, maxZoomFactor);
-			}
-			return adjusted;
+				{
+					adjusted = true;
+					camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoomFactor, maxZoomFactor);
+				}
+				return adjusted;
 		}
 		
 		public bool AdjustPosition()
-		{
+		{/*
 			bool adjusted = false;
 			Vector2 displacement = Vector2.zero;
 			if (minPoint.x < 0)
@@ -95,6 +98,8 @@ namespace View
 			}
 			transform.position += (Vector3)displacement;
 			return adjusted;
+			*/
+			return false;
 		}
 		
 		public void Translate(Vector2 displacement)
@@ -107,7 +112,7 @@ namespace View
 			camera.orthographicSize = Mathf.Clamp(camera.orthographicSize * (1 - size / ((cameraResolution.x + cameraResolution.y) * 0.5f)), minZoomFactor, maxZoomFactor);
 		}
 		
-		private void OnDrawGizmosSelected()
+		private void OnDrawGizmos()
 		{
 			Gizmos.color = Color.green;
 			for (int i = 0; i < controlPoints.Length; i++)
