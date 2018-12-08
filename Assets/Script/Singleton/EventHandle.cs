@@ -144,4 +144,9 @@ public class EventHandle : MonoBehaviour
 		Debug.Log("HP data recievd");
 		GameFlow.fireControl.EvaluateHP(hps,false);
 	}
+	public static void DamageUnit(Unit unit,int deltaHP)
+	{
+		unit.hp += deltaHP;
+		GameFlow.billboardManager.Spawn(deltaHP.ToString(), unit.position);
+	}
 }

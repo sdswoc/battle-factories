@@ -6,7 +6,6 @@ using Pathfinding;
 public class Unit : MonoBehaviour 
 {
 	public float viewRadius;
-	public float movementRadius;
 	public float selectionRadius;
 	public float speed;
 	public int movementBlock;
@@ -15,10 +14,11 @@ public class Unit : MonoBehaviour
 	public bool selectable;
 	public int unitID;
 	public int hp;
+	public int damage;
 	private new Transform transform;
 	private List<PathNode> path;
+	public static List<Unit> attackList = new List<Unit>();
 	public static List<Unit> units = new List<Unit>();
-	private static int idGenerator;
 
 	private void Awake()
 	{
@@ -26,19 +26,9 @@ public class Unit : MonoBehaviour
 		position = new Vector2Int(Mathf.RoundToInt(transform.position.x),Mathf.RoundToInt(transform.position.y));
 		transform.position = (Vector2)position;
 		path = new List<PathNode>();
-		Spawn(position, UnitType.Friendly, 5);
+		
 	}
 
-
-	private void OnDrawGizmos()
-	{
-		if (type == UnitType.Friendly)
-			Gizmos.color = Color.green;
-		else
-			Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere(GetComponent<Transform>().position, selectionRadius);
-	}
-	
 	public void Spawn(Vector2Int position,UnitType type,int id)
 	{
 		this.position = position;
@@ -53,12 +43,7 @@ public class Unit : MonoBehaviour
 	{
 		GameFlow.map.UnRegisterObstacle(position);
 		units.Remove(this);
-	}
-	
-	public void Move(Vector2Int position)
-	{
-		this.position = position;
-		transform.position = (Vector2)position;
+		Destroy(gameObject);
 	}
 
 	public void Move(List<PathNode> path)
@@ -74,6 +59,43 @@ public class Unit : MonoBehaviour
 			this.path.Add(path[i]);
 		}
 		StartCoroutine(FollowPath());
+	}
+
+	public void GenerateAttackList()
+	{
+		attackList.Clear();
+		for (int i = 0;i < units.Count;i++)
+		{
+			Unit unit = units[i];
+			if (unit.unitID != unitID)
+			{
+				if (unit.type != type)
+				{
+					if ((unit.position - position).sqrMagnitude <= viewRadius * viewRadius)
+					{
+						attackList.Add(unit);
+					}
+				}
+			}
+		}
+	}
+
+	public IEnumerator Attack()
+	{
+		Debug.Log("Attack coroutine started"+attackList.Count);
+		for (int i = 0; i < attackList.Count; i++)
+		{
+			Unit unit = attackList[i];
+			Debug.Log("attacking " + unit.ToString());
+			EventHandle.DamageUnit(unit, damage);
+			for (float t = 0; t < 1; t += Time.deltaTime*4)
+			{
+				transform.position = Vector2.Lerp((Vector2)position, (Vector2)unit.position, Mathf.Sin(Mathf.PI*t));
+				Debug.DrawLine((Vector2)(position), (Vector2)unit.position, Color.green);
+				yield return new WaitForEndOfFrame();
+			}
+			transform.position = (Vector2)position;
+		}
 	}
 
 	private IEnumerator FollowPath()
@@ -95,6 +117,9 @@ public class Unit : MonoBehaviour
 			selectable = true;
 		}
 	}
+
+	
+
 }
 
 public enum UnitType

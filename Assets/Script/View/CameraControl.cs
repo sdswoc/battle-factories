@@ -22,6 +22,8 @@ namespace View
 		{
 			GameFlow.cameraControl = this;
 			camera = GetComponent<Camera>();
+			GameFlow.camera = camera;
+			GameFlow.cameraTransform = GetComponent<Transform>();
 			transform = GetComponent<Transform>();
 			cameraResolution = new Vector2(camera.pixelWidth, camera.pixelHeight);
 		}

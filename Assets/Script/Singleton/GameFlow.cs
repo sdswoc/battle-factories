@@ -30,6 +30,9 @@ public class GameFlow
 	public static UISetupMode uiSetupMode;
 	public static UIFireMode uiFireMode;
 	public static FireControl fireControl;
+	public static Transform cameraTransform;
+	public static Camera camera;
+	public static BillboardManager billboardManager;
 
 	public const float FACTORY_SETUP_TIMELIMIT = 10;
 	public const float TURN_TIME_LIMIT = 10;

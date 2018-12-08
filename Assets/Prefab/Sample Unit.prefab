@@ -195,11 +195,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewRadius: 8
-  movementRadius: 4
   selectionRadius: 1
-  speed: 7
+  speed: 25
   movementBlock: 18
   type: 0
   position: {x: 0, y: 0}
   selectable: 1
   unitID: 0
+  hp: 20
+  damage: -10

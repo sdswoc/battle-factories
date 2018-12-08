@@ -42,6 +42,7 @@ public class SetupFactory : MonoBehaviour, IControl
 			factory.MoveToPosition(clientFactoryPosition);
 			prevPosition = clientFactoryPosition;
 		}
+		GetComponent<MeshRenderer>().enabled = (false);
 	}
 	public void KeyCanceled()
 	{
@@ -61,6 +62,7 @@ public class SetupFactory : MonoBehaviour, IControl
 	}
 	public void KeyPressed(Vector2 position)
 	{
+		GetComponent<MeshRenderer>().enabled = (true);
 		invokeReleaseEvent = true;
 		factory.MoveToPosition(Convert(position));
 		transform.position = (Vector2)Convert(position);
