@@ -15,6 +15,7 @@ public class Unit : MonoBehaviour
 	public int unitID;
 	public int hp;
 	public int damage;
+	public int fuelConsumption;
 	private new Transform transform;
 	private List<PathNode> path;
 	public static List<Unit> attackList = new List<Unit>();
@@ -26,7 +27,6 @@ public class Unit : MonoBehaviour
 		position = new Vector2Int(Mathf.RoundToInt(transform.position.x),Mathf.RoundToInt(transform.position.y));
 		transform.position = (Vector2)position;
 		path = new List<PathNode>();
-		
 	}
 
 	public void Spawn(Vector2Int position,UnitType type,int id)
@@ -35,8 +35,13 @@ public class Unit : MonoBehaviour
 		this.type = type;
 		unitID = id;
 		transform.position = (Vector2)position;
+		selectable = true;
 		units.Add(this);
 		GameFlow.map.RegisterObstacle(position);
+		if (type == UnitType.Enemy)
+		{
+			GetComponent<MeshRenderer>().material = null;
+		}
 	}
 	
 	public void Despawn()
@@ -52,6 +57,10 @@ public class Unit : MonoBehaviour
 		{
 			GameFlow.map.MoveUnit(path[0].position, path[path.Count - 1].position);
 			position = path[path.Count - 1].position;
+		}
+		if (type == UnitType.Friendly)
+		{
+			EventHandle.SetResource(GameFlow.money, GameFlow.fuel - fuelConsumption);
 		}
 		this.path.Clear();
 		for (int i = 0;i < path.Count;i++)
@@ -82,11 +91,9 @@ public class Unit : MonoBehaviour
 
 	public IEnumerator Attack()
 	{
-		Debug.Log("Attack coroutine started"+attackList.Count);
 		for (int i = 0; i < attackList.Count; i++)
 		{
 			Unit unit = attackList[i];
-			Debug.Log("attacking " + unit.ToString());
 			EventHandle.DamageUnit(unit, damage);
 			for (float t = 0; t < 1; t += Time.deltaTime*4)
 			{
@@ -117,8 +124,6 @@ public class Unit : MonoBehaviour
 			selectable = true;
 		}
 	}
-
-	
 
 }
 

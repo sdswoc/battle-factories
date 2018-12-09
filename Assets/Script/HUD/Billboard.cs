@@ -22,7 +22,6 @@ public class Billboard : MonoBehaviour
 	}
 	public void Spawn(string text,Vector2 position)
 	{
-		Debug.Log("Lon");
 		tMesh = GetComponent<TextMesh>();
 		transform = GetComponent<Transform>();
 		tMesh.text = (text);

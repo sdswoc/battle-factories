@@ -20,6 +20,7 @@ namespace Grid
 			data = new bool[width, height];
 			GameFlow.aStar = new AStar(ref data, width, height);
 			GameFlow.potentialMap = new PotentialMap(width, height);
+			EventHandle.Initialization();
 		}
 
 		private Mesh GenerateMesh()

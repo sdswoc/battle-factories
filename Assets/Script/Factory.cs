@@ -9,8 +9,6 @@ public class Factory : MonoBehaviour
 	public Vector2Int position;
 	public UnitType type;
 	public GameObject[] units;
-	public Vector2Int serverFactoryPosition;
-	public Vector2Int clientFactoryPosition;
 	public bool established;
 	private static int idGeneratorIndex;
 
@@ -25,14 +23,6 @@ public class Factory : MonoBehaviour
 		{
 			GameFlow.enemyFactory = this;
 			gameObject.SetActive(false);
-		}
-		if (Socket.socketType == SocketType.Server)
-		{
-			MoveToPosition(serverFactoryPosition);
-		}
-		else
-		{
-			MoveToPosition(clientFactoryPosition);
 		}
 	}
 	public void MoveToPosition(Vector2Int position)

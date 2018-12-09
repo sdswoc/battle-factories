@@ -148,7 +148,6 @@ public class SetupFactory : MonoBehaviour, IControl
 
 	public void SetActive(bool b)
 	{
-		Debug.Log("SetActive " + b.ToString());
 		active = b;
 		invokeReleaseEvent = false;
 		if (active)

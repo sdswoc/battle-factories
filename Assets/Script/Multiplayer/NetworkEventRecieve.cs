@@ -52,7 +52,6 @@ namespace Multiplayer
 		public static void RecieveEvent(Packet p)
 		{
 			byte opCode = p.ReadByte();
-			Debug.Log("OPCode recieved " + opCode.ToString());
 			switch (opCode)
 			{
 				case 1:

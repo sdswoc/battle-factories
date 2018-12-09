@@ -56,7 +56,7 @@ namespace Control
 			{
 				if (Unit.units[i].type == type)
 				{
-					if (Unit.units[i].selectable == true)
+					if (Unit.units[i].selectable == true && Unit.units[i].fuelConsumption <= GameFlow.fuel)
 					{
 						Unit un = Unit.units[i];
 						float distance = (un.position - position).sqrMagnitude;

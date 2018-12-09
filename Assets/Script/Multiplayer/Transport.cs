@@ -26,7 +26,6 @@ namespace Multiplayer
 		}
 		private void DataEvent(Packet packet)
 		{
-			Debug.Log("Data recieved");
 			NetworkEventRecieve.RecieveEvent(packet);
 		}
 	}

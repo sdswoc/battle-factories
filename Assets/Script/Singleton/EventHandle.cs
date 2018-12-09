@@ -34,10 +34,12 @@ public class EventHandle : MonoBehaviour
 		{
 			GameFlow.uiSetupMode.SetDeadLine();
 		}
+
 		if (Socket.socketType == SocketType.Server)
 		{
 			if (GameFlow.friendlyFactory.established && GameFlow.enemyFactory.established)
 			{
+
 				SocketType firstTurn = SocketType.Server;
 				Debug.Log("TODO set randomness");
 				if (Random.Range(0.1f, 1) > 0)
@@ -45,6 +47,7 @@ public class EventHandle : MonoBehaviour
 					firstTurn = SocketType.Client;
 				}
 				AnnounceStartGame(firstTurn);
+
 			}
 		}
 	}
@@ -98,12 +101,14 @@ public class EventHandle : MonoBehaviour
 		{
 			GameFlow.SetMode(Control.UIMode.Move);
 			GameFlow.uiMoveMode.SetDeadline(GameFlow.TURN_TIME_LIMIT);
+			GameFlow.uiSpawnUnit.Close();
 		}
 		else
 		{
 			GameFlow.SetMode(Control.UIMode.EnemyWait);
 			GameFlow.uiWaitMode.Wait(GameFlow.TURN_TIME_LIMIT);
 		}
+		SetResource(GameFlow.money + GameFlow.moneyRate, GameFlow.fuelLimit);
 		EventHandle.myTurn = myTurn;
 	}
 	public static void FinishTurnLocal()
@@ -141,12 +146,33 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void SyncHP(Vector2Int[] hps)
 	{
-		Debug.Log("HP data recievd");
 		GameFlow.fireControl.EvaluateHP(hps,false);
 	}
 	public static void DamageUnit(Unit unit,int deltaHP)
 	{
 		unit.hp += deltaHP;
 		GameFlow.billboardManager.Spawn(deltaHP.ToString(), unit.position);
+	}
+	public static void SetResource(int money,int fuel)
+	{
+		GameFlow.money = money;
+		GameFlow.fuel = fuel;
+		GameFlow.uIResourceCounter.StateUpdate();
+		GameFlow.uiSpawnUnit.StateUpdate();
+	}
+	public static void Initialization()
+	{
+		GameFlow.money = 0;
+		GameFlow.fuel = 0;
+		GameFlow.moneyRate = 3;
+		GameFlow.fuelLimit = 5;
+	}
+	public static void MoneyUpgrade()
+	{
+		GameFlow.moneyRate += 5;
+	}
+	public static void FuelUpgrade()
+	{
+		GameFlow.fuelLimit += 5;
 	}
 }

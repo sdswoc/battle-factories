@@ -51,7 +51,6 @@ namespace Multiplayer
 		public static void ConnectEvent()
 		{
 			OnConnected?.Invoke();
-			Debug.Log("Connected");
 		}
 		public static void DisconnectEvent()
 		{
@@ -106,7 +105,6 @@ namespace Multiplayer
 		{
 			foreach (BeaconLocation beacon in beacons)
 			{
-				Debug.Log("Beacon Found"+ beacon.Address.ToString()+ beacon.Address.Address.ToString());
 				StartClient(beacon.Address.Address.ToString(), beacon.Address.Port);
 				probe?.Stop();
 				probe?.Dispose();

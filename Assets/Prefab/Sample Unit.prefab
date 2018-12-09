@@ -204,3 +204,4 @@ MonoBehaviour:
   unitID: 0
   hp: 20
   damage: -10
+  fuelConsumption: 3

@@ -56,7 +56,6 @@ namespace Multiplayer
 		// Code = 5
 		public static void TurnFinish()
 		{
-			Debug.Log("send turn finish");
 			Packet p = new Packet(5);
 			Socket.Send(p);
 		}

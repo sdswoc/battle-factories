@@ -12,7 +12,6 @@ public class BillboardManager : MonoBehaviour
 	}
 	public void Spawn(string s,Vector2 position)
 	{
-		Debug.Log("D");
 		Instantiate(billboardObject).GetComponent<Billboard>().Spawn(s,position);
 	}
 }

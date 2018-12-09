@@ -12,19 +12,18 @@ public class FireControl : MonoBehaviour
 	}
 	public void Execute(bool myTurn)
 	{
-		Debug.Log("Execute" + myTurn.ToString());
 		StopAllCoroutines();
 		StartCoroutine(TempFire(myTurn));
 	}
 
 	IEnumerator TempFire(bool myTurn)
 	{
-		Debug.Log("Temp fire");
 		for (int i = 0;i < Unit.units.Count;i++)
 		{
 			Unit.units[i].GenerateAttackList();
 			yield return StartCoroutine(Unit.units[i].Attack());
 		}
+		yield return new WaitForEndOfFrame();
 		EventHandle.FinishFire(myTurn);
 	}
 
@@ -46,7 +45,6 @@ public class FireControl : MonoBehaviour
 	}
 	public void EvaluateHP(bool myTurn)
 	{
-		
 		FinishEvaluation(myTurn);
 	}
 	public void FinishEvaluation(bool myTurn)
@@ -56,6 +54,7 @@ public class FireControl : MonoBehaviour
 			if (Unit.units[i].hp <= 0)
 			{
 				Unit.units[i].Despawn();
+				i--;
 			}
 		}
 		EventHandle.SetTurn(!myTurn);
