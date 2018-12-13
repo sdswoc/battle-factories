@@ -11,6 +11,7 @@ namespace Grid
 		public int height;
 		public int cellSize;
 		public bool[,] data;
+		public float cameraOffset;
 		private Mesh mesh;
 
 		private void Awake()
@@ -46,14 +47,14 @@ namespace Grid
 			return m;
 		}
 
-		public float GetCameraWidth()
+		public Vector2 GetCameraMinimum()
 		{
-			return width - 1;
+			return new Vector2(-0.5f- cameraOffset, -0.5f- cameraOffset);
 		}
 
-		public float GetCameraHeight()
+		public Vector2 GetCameraMaximum()
 		{
-			return height - 1;
+			return new Vector2(width - 0.5f+ cameraOffset, height - 0.5f+ cameraOffset);
 		}
 
 		public void RegisterObstacle(GridRectangle rectangle)
@@ -118,6 +119,7 @@ namespace Grid
 
 		private void OnDrawGizmos()
 		{
+			Gizmos.DrawWireCube((GetCameraMaximum() + GetCameraMinimum()) * 0.5f, (GetCameraMaximum() - GetCameraMinimum()));
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)

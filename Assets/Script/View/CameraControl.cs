@@ -16,6 +16,9 @@ namespace View
 		private Vector2[] controlPoints = new Vector2[4];
 		private Vector2 minPoint;
 		private Vector2 maxPoint;
+		private Vector2 virtualXAxis;
+		private Vector2 virtualYAxis;
+		private Vector2[] mapControlPoints = new Vector2[4];
 		private Vector2 cameraResolution;
 
 		private void Awake()
@@ -38,70 +41,74 @@ namespace View
 			float factor = -origin.z / direction.z;
 			return (Vector2)(origin + direction * factor);
 		}
-		
+
 		public bool AdjustZoom()
 		{
+			UpdateControlPoints();
 			bool adjusted = false;
-			/*
-				
-				float spanWidth, spanHeight, constrainWidth, constrainHeight;
-				spanWidth = maxPoint.x - minPoint.x;
-				spanHeight = maxPoint.y - minPoint.y;
-				constrainWidth = GameFlow.map.GetCameraWidth();
-				constrainHeight = GameFlow.map.GetCameraHeight();
-				if (spanWidth / spanHeight > constrainWidth / constrainHeight)
+			float spanWidth, spanHeight, constrainWidth, constrainHeight;
+			spanWidth = Vector2.Dot((controlPoints[3] - controlPoints[2]),virtualXAxis);
+			spanHeight = Vector2.Dot(controlPoints[1] - controlPoints[2],virtualYAxis);
+			constrainWidth = (maxPoint-minPoint).x;
+			constrainHeight = (maxPoint-minPoint).y;
+			if (spanWidth / spanHeight > constrainWidth / constrainHeight)
+			{
+				if (spanWidth > constrainWidth)
 				{
-					if (spanWidth > constrainWidth)
-					{
-						camera.orthographicSize *= constrainWidth / spanWidth;
-						adjusted = true;
-					}
-				}
-				else
-				{
-					if (spanHeight > constrainHeight)
-					{
-						camera.orthographicSize *= constrainHeight / spanHeight;
-						adjusted = true;
-					}
-				}
-				*/
-			if (camera.orthographicSize < minZoomFactor || camera.orthographicSize > maxZoomFactor)
-				{
+					camera.orthographicSize *= constrainWidth / spanWidth;
 					adjusted = true;
-					camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoomFactor, maxZoomFactor);
 				}
-				return adjusted;
+			}
+			else
+			{
+				if (spanHeight > constrainHeight)
+				{
+					camera.orthographicSize *= constrainHeight / spanHeight;
+					adjusted = true;
+				}
+			}
+			if (camera.orthographicSize < minZoomFactor || camera.orthographicSize > maxZoomFactor)
+			{
+				adjusted = true;
+				camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minZoomFactor, maxZoomFactor);
+			}
+			return adjusted;
 		}
 		
 		public bool AdjustPosition()
-		{/*
+		{
+			UpdateControlPoints();
 			bool adjusted = false;
+			Vector2 min = virtualXAxis * minPoint.x + virtualYAxis * minPoint.y;
+			Vector2 max = virtualXAxis * maxPoint.x + virtualYAxis * maxPoint.y;
+			Debug.DrawLine(min, max);
+			Debug.DrawLine(min, controlPoints[2], Color.gray);
+			min = controlPoints[2] - min;
+			max = controlPoints[0] - max;
+
 			Vector2 displacement = Vector2.zero;
-			if (minPoint.x < 0)
+			if (Vector2.Dot(min,virtualXAxis) < 0)
 			{
-				displacement.x -= minPoint.x;
+				displacement.x -= Vector2.Dot(min, virtualXAxis);
 				adjusted = true;
 			}
-			if (minPoint.y < 0)
+			if (Vector2.Dot(min, virtualYAxis) < 0)
 			{
-				displacement.y -= minPoint.y;
+				displacement.y -= Vector2.Dot(min, virtualYAxis);
 				adjusted = true;
 			}
-			if (maxPoint.x > GameFlow.map.GetCameraWidth())
+			if (Vector2.Dot(max, virtualXAxis) > 0)
 			{
-				displacement.x -= maxPoint.x - GameFlow.map.GetCameraWidth();
+				displacement.x -= Vector2.Dot(max, virtualXAxis);
 				adjusted = true;
 			}
-			if (maxPoint.y > GameFlow.map.GetCameraHeight())
+			if (Vector2.Dot(max, virtualYAxis) > 0)
 			{
-				displacement.y -= maxPoint.y - GameFlow.map.GetCameraHeight();
+				displacement.y -= Vector2.Dot(max, virtualYAxis);
 				adjusted = true;
 			}
-			transform.position += (Vector3)displacement;
+			transform.position += (Vector3)(displacement.x*virtualXAxis+displacement.y*virtualYAxis);
 			return adjusted;
-			*/
-			return false;
 		}
 		
 		public void Translate(Vector2 displacement)
@@ -137,25 +144,31 @@ namespace View
 			controlPoints[2] = TransformCameraToWorld(new Vector2(0, 0));
 			controlPoints[3] = TransformCameraToWorld(new Vector2(cameraResolution.x, 0));
 
-			minPoint = controlPoints[0];
-			maxPoint = controlPoints[0];
-			for (int i = 0; i < controlPoints.Length; i++)
+			virtualXAxis = (controlPoints[0] - controlPoints[1]).normalized;
+			virtualYAxis = (controlPoints[1] - controlPoints[2]).normalized;
+			mapControlPoints[0] = GameFlow.map.GetCameraMinimum();
+			mapControlPoints[1] = new Vector2(GameFlow.map.GetCameraMaximum().x, GameFlow.map.GetCameraMinimum().y);
+			mapControlPoints[2] = GameFlow.map.GetCameraMaximum();
+			mapControlPoints[3] = new Vector2(GameFlow.map.GetCameraMinimum().x, GameFlow.map.GetCameraMaximum().y);
+
+			minPoint = maxPoint = new Vector2(Vector2.Dot(mapControlPoints[0], virtualXAxis), Vector2.Dot(mapControlPoints[0], virtualYAxis));
+			for (int i = 1; i < 4; i++)
 			{
-				if (controlPoints[i].x < minPoint.x)
+				if (Vector2.Dot(mapControlPoints[i], virtualXAxis) < minPoint.x)
 				{
-					minPoint.x = controlPoints[i].x;
+					minPoint.x = Vector2.Dot(mapControlPoints[i], virtualXAxis);
 				}
-				if (controlPoints[i].y < minPoint.y)
+				else if (Vector2.Dot(mapControlPoints[i], virtualXAxis) > maxPoint.x)
 				{
-					minPoint.y = controlPoints[i].y;
+					maxPoint.x = Vector2.Dot(mapControlPoints[i], virtualXAxis);
 				}
-				if (controlPoints[i].x > maxPoint.x)
+				if (Vector2.Dot(mapControlPoints[i], virtualYAxis) < minPoint.y)
 				{
-					maxPoint.x = controlPoints[i].x;
+					minPoint.y = Vector2.Dot(mapControlPoints[i], virtualYAxis);
 				}
-				if (controlPoints[i].y > maxPoint.y)
+				else if (Vector2.Dot(mapControlPoints[i], virtualYAxis) > maxPoint.y)
 				{
-					maxPoint.y = controlPoints[i].y;
+					maxPoint.y = Vector2.Dot(mapControlPoints[i], virtualYAxis);
 				}
 			}
 		}

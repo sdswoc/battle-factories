@@ -124,6 +124,10 @@ public class Troop : Unit
 		}
 	}
 
+	private void OnDrawGizmos()
+	{
+		Gizmos.DrawWireSphere((Vector2)position, selectionRadius);
+	}
 }
 
 public enum UnitType
