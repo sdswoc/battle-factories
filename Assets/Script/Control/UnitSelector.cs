@@ -25,8 +25,8 @@ namespace Control
 		private Mesh rangeMesh;
 		private Mesh pathMesh;
 		private bool triggerReleaseEvent = false;
-		private Unit selection;
-		private Unit prevSelection;
+		private Troop selection;
+		private Troop prevSelection;
 		private Vector2Int prevPointer;
 		private List<Vector3> vertices = new List<Vector3>();
 		private List<int> triangles = new List<int>();
@@ -48,17 +48,17 @@ namespace Control
 			pathMeshFilter.mesh = pathMesh;
 		}
 
-		private Unit GetUnit(Vector2 position, UnitType type)
+		private Troop GetUnit(Vector2 position, UnitType type)
 		{
 			float maxDistance = float.PositiveInfinity;
-			Unit tmpUnit = null;
-			for (int i = 0; i < Unit.units.Count; i++)
+			Troop tmpUnit = null;
+			for (int i = 0; i < GameFlow.units.Count; i++)
 			{
-				if (Unit.units[i].type == type)
+				if (GameFlow.units[i].type == type)
 				{
-					if (Unit.units[i].selectable == true && Unit.units[i].fuelConsumption <= GameFlow.fuel)
+					Troop un = GameFlow.units[i] as Troop;
+					if (un != null && un.selectable == true && un.fuelConsumption <= GameFlow.fuel)
 					{
-						Unit un = Unit.units[i];
 						float distance = (un.position - position).sqrMagnitude;
 						if (distance < un.selectionRadius * un.selectionRadius)
 						{
@@ -74,7 +74,7 @@ namespace Control
 			return tmpUnit;
 		}
 
-		private void Select(Unit unit)
+		private void Select(Troop unit)
 		{
 			pathList.Clear();
 			GeneratePathMesh(pathMesh);

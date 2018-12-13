@@ -88,6 +88,7 @@ public class SetupFactory : MonoBehaviour, IControl
 	}
 	public void OnOKButton()
 	{
+		GameFlow.uIResourceCounter.Spawn();
 		EventHandle.SetFriendlyFactory(prevPosition);
 	}
 	private void GUIUpdate()
@@ -140,12 +141,10 @@ public class SetupFactory : MonoBehaviour, IControl
 		}
 		m.SetColors(colorList);
 	}
-
 	public bool GetActive()
 	{
 		return active;
 	}
-
 	public void SetActive(bool b)
 	{
 		active = b;

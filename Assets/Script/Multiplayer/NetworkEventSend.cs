@@ -9,6 +9,7 @@ namespace Multiplayer
 		// Code = 1
 		public static void FactoryLocation(int x,int y)
 		{
+			Debug.Log("SendFactoryLocation");
 			Packet p = new Packet(1);
 			p.WriteInt(x);
 			p.WriteInt(y);
@@ -18,6 +19,7 @@ namespace Multiplayer
 		// Code = 2
 		public static void SpawnUnit(int x,int y,byte index,int id)
 		{
+			Debug.Log("SendSpawnUnit");
 			Packet p = new Packet(2);
 			p.WriteInt(x);
 			p.WriteInt(y);
@@ -29,6 +31,7 @@ namespace Multiplayer
 		// Code = 3
 		public static void MoveUnit(int id,Vector2Int from,Vector2Int to)
 		{
+			Debug.Log("SendMoveUnit");
 			Packet p = new Packet(3);
 			p.WriteInt(id);
 			p.WriteInt(from.x);
@@ -41,6 +44,7 @@ namespace Multiplayer
 		// Code = 4
 		public static void SetTurn(bool myTurn)
 		{
+			Debug.Log("SendSetTurn");
 			Packet p = new Packet(4);
 			if (myTurn)
 			{
@@ -56,6 +60,7 @@ namespace Multiplayer
 		// Code = 5
 		public static void TurnFinish()
 		{
+			Debug.Log("SendTurnFinish");
 			Packet p = new Packet(5);
 			Socket.Send(p);
 		}
@@ -63,12 +68,13 @@ namespace Multiplayer
 		// Code = 6
 		public static void HPSync(Vector2Int[] data)
 		{
+			Debug.Log("SendHPSync");
 			Packet p = new Packet(6);
-			p.WriteInt(Unit.units.Count);
-			for (int i = 0;i < Unit.units.Count;i++)
+			p.WriteInt(GameFlow.units.Count);
+			for (int i = 0;i < GameFlow.units.Count;i++)
 			{
-				p.WriteInt(Unit.units[i].unitID);
-				p.WriteInt(Unit.units[i].hp);
+				p.WriteInt(GameFlow.units[i].unitID);
+				p.WriteInt(GameFlow.units[i].hp);
 			}
 			Socket.Send(p);
 		}

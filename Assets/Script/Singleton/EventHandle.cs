@@ -16,8 +16,6 @@ public class EventHandle : MonoBehaviour
 		if (GameFlow.controlRelay.uiMode == Control.UIMode.Setup)
 		{
 			GameFlow.friendlyFactory.Setup(position);
-			GameFlow.SetMode(Control.UIMode.EnemyWait);
-			GameFlow.uiWaitMode.Wait(GameFlow.FACTORY_SETUP_TIMELIMIT);
 			NetworkEventSend.FactoryLocation(position.x, position.y);
 			CheckFactorySetupAndStartTheGame();
 		}
@@ -34,12 +32,15 @@ public class EventHandle : MonoBehaviour
 		{
 			GameFlow.uiSetupMode.SetDeadLine();
 		}
-
-		if (Socket.socketType == SocketType.Server)
+		else if (GameFlow.friendlyFactory.established && !GameFlow.enemyFactory.established)
+		{
+			GameFlow.SetMode(Control.UIMode.EnemyWait);
+			GameFlow.uiWaitMode.Wait(GameFlow.FACTORY_SETUP_TIMELIMIT);
+		}
+		else if (Socket.socketType == SocketType.Server)
 		{
 			if (GameFlow.friendlyFactory.established && GameFlow.enemyFactory.established)
 			{
-
 				SocketType firstTurn = SocketType.Server;
 				Debug.Log("TODO set randomness");
 				if (Random.Range(0.1f, 1) > 0)
@@ -47,13 +48,16 @@ public class EventHandle : MonoBehaviour
 					firstTurn = SocketType.Client;
 				}
 				AnnounceStartGame(firstTurn);
-
 			}
+		}
+		else
+		{
+			GameFlow.SetMode(Control.UIMode.None);
 		}
 	}
 	public static void CreateFriendlyUnit(byte index)
 	{
-		Unit unit = GameFlow.friendlyFactory.CreateUnit(index);
+		Troop unit = GameFlow.friendlyFactory.CreateUnit(index);
 		NetworkEventSend.SpawnUnit(unit.position.x, unit.position.y, index, unit.unitID);
 	}
 	public static void CreateEnemyUnit(Vector2Int position,byte index,int id)
@@ -62,12 +66,12 @@ public class EventHandle : MonoBehaviour
 	}
 	private static void MoveUnitGeneral(int id,Vector2Int from,Vector2Int to)
 	{
-		Unit unit = null;
-		for (int i = 0;i < Unit.units.Count;i++)
+		Troop unit = null;
+		for (int i = 0;i < GameFlow.units.Count;i++)
 		{
-			if (Unit.units[i].unitID == id)
+			if (GameFlow.units[i].unitID == id)
 			{
-				unit = Unit.units[i];
+				unit = GameFlow.units[i] as Troop;
 				break;
 			}
 		}
@@ -135,12 +139,12 @@ public class EventHandle : MonoBehaviour
 	public static void SendHP()
 	{
 		Debug.Log("HPs sent");
-		int size = Unit.units.Count;
+		int size = GameFlow.units.Count;
 		Vector2Int[] data = new Vector2Int[size];
 		for (int i = 0; i < size; i++)
 		{
-			data[i].x = Unit.units[i].unitID;
-			data[i].y = Unit.units[i].hp;
+			data[i].x = GameFlow.units[i].unitID;
+			data[i].y = GameFlow.units[i].hp;
 		}
 		NetworkEventSend.HPSync(data);
 	}
@@ -151,7 +155,7 @@ public class EventHandle : MonoBehaviour
 	public static void DamageUnit(Unit unit,int deltaHP)
 	{
 		unit.hp += deltaHP;
-		GameFlow.billboardManager.Spawn(deltaHP.ToString(), unit.position);
+		//GameFlow.billboardManager.Spawn(deltaHP.ToString(), unit.position);
 	}
 	public static void SetResource(int money,int fuel)
 	{
@@ -170,9 +174,11 @@ public class EventHandle : MonoBehaviour
 	public static void MoneyUpgrade()
 	{
 		GameFlow.moneyRate += 5;
+		GameFlow.uIResourceCounter.StateUpdate();
 	}
 	public static void FuelUpgrade()
 	{
 		GameFlow.fuelLimit += 5;
+		GameFlow.uIResourceCounter.StateUpdate();
 	}
 }

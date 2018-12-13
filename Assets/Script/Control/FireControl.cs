@@ -10,6 +10,11 @@ public class FireControl : MonoBehaviour
 	{
 		GameFlow.fireControl = this;
 	}
+	private void Start()
+	{
+		//StartCoroutine(TempFire(false));
+		//FinishEvaluation(false);
+	}
 	public void Execute(bool myTurn)
 	{
 		StopAllCoroutines();
@@ -18,10 +23,28 @@ public class FireControl : MonoBehaviour
 
 	IEnumerator TempFire(bool myTurn)
 	{
-		for (int i = 0;i < Unit.units.Count;i++)
+		GameFlow.fireIndicator.StartFire();
+		for (int i = 0; i < GameFlow.units.Count; i++)
 		{
-			Unit.units[i].GenerateAttackList();
-			yield return StartCoroutine(Unit.units[i].Attack());
+			Debug.Log("Rename");
+			Troop t = null;
+			t = GameFlow.units[i] as Troop;
+			if (t != null)
+			{
+				t.StopAllCoroutines();
+				t.EndPath(t.position);
+			}
+		}
+		yield return new WaitForEndOfFrame();
+		for (int i = 0;i < GameFlow.units.Count;i++)
+		{
+			Troop t = null;
+			t = GameFlow.units[i] as Troop;
+			t?.GenerateAttackList();
+			if (t != null)
+			{
+				yield return StartCoroutine(t.Attack());
+			}
 		}
 		yield return new WaitForEndOfFrame();
 		EventHandle.FinishFire(myTurn);
@@ -32,36 +55,39 @@ public class FireControl : MonoBehaviour
 		for (int i = 0;i < hps.Length;i++)
 		{
 			int id = hps[i].x;
-			for (int j = 0;j < Unit.units.Count;j++)
+			for (int j = 0;j < GameFlow.units.Count;j++)
 			{
-				if (Unit.units[j].unitID == id)
+				if (GameFlow.units[j].unitID == id)
 				{
-					Unit.units[j].hp = hps[i].y;
+					GameFlow.units[j].hp = hps[i].y;
 					break;
 				}
 			}
 		}
-		FinishEvaluation(myTurn);
+		StartCoroutine(FinishEvaluation(myTurn));
 	}
 	public void EvaluateHP(bool myTurn)
 	{
-		FinishEvaluation(myTurn);
+		StartCoroutine(FinishEvaluation(myTurn));
 	}
-	public void FinishEvaluation(bool myTurn)
+	public IEnumerator FinishEvaluation(bool myTurn)
 	{
-		for (int i = 0;i < Unit.units.Count;i++)
+		Debug.Log("Waiting");
+		yield return new WaitUntil(() => Projectile.list.Count <= 0);
+		for (int i = 0;i < GameFlow.units.Count;i++)
 		{
-			if (Unit.units[i].hp <= 0)
+			if (GameFlow.units[i].hp <= 0)
 			{
-				Unit.units[i].Despawn();
+				GameFlow.units[i].Despawn();
 				i--;
 			}
 		}
+		GameFlow.fireIndicator.CloseFire();
 		EventHandle.SetTurn(!myTurn);
 	}
 }
 public struct FireEvent
 {
-	Unit dealer;
-	Unit target;
+	Troop dealer;
+	Troop target;
 }

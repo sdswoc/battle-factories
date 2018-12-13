@@ -9,9 +9,10 @@ public class BillboardManager : MonoBehaviour
 	private void Awake()
 	{
 		GameFlow.billboardManager = this;
+		SimplePool.Preload(billboardObject, 5);
 	}
 	public void Spawn(string s,Vector2 position)
 	{
-		Instantiate(billboardObject).GetComponent<Billboard>().Spawn(s,position);
+	SimplePool.Spawn(billboardObject,Vector3.zero,Quaternion.identity).GetComponent<Billboard>().Spawn(s, position);
 	}
 }

@@ -5,7 +5,7 @@ namespace HUD
 	public class RangeIndicator : MonoBehaviour
 	{
 		public int detail;
-		public Unit unit;
+		public Troop unit;
 		private Mesh mesh;
 		private void Awake()
 		{

@@ -33,15 +33,18 @@ public class GameFlow
 	public static Transform cameraTransform;
 	public static Camera camera;
 	public static BillboardManager billboardManager;
-	public static UISpawnUnit uiSpawnUnit;
+	public static UISpawnModule uiSpawnUnit;
 	public static UIResourceCounter uIResourceCounter;
+	public static List<Unit> units = new List<Unit>();
+	public static Timer timer;
+	public static FireIndicator fireIndicator;
 	public static int money;
 	public static int fuel;
 	public static int moneyRate = 5;
 	public static int fuelLimit = 5;
 
 	public const float FACTORY_SETUP_TIMELIMIT = 10;
-	public const float TURN_TIME_LIMIT = 10;
+	public const float TURN_TIME_LIMIT = 20;
 
 
 	public static void SetMode(UIMode mode)

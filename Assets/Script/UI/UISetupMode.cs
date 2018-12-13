@@ -9,10 +9,17 @@ namespace UI
 	public class UISetupMode : MonoBehaviour
 	{
 		public Text timerText;
+		public RectTransform buttonTransform;
+		public RectTransform timerTextTransform;
+		public RectTransform tickImageTransform;
+		public AnimationCurve transitionCurve;
+
 		private bool clicked = false;
 		private void Awake()
 		{
+			buttonTransform.offsetMin = new Vector2(buttonTransform.offsetMax.x - buttonTransform.rect.height, buttonTransform.offsetMin.y);
 			GameFlow.uiSetupMode = this;
+			ButtonChangeTranslation(0);
 		}
 		public void OnOKButton()
 		{
@@ -25,16 +32,40 @@ namespace UI
 		public void SetDeadLine()
 		{
 			StopAllCoroutines();
+			StartCoroutine(ButtonTransition());
 			StartCoroutine(Timer(GameFlow.FACTORY_SETUP_TIMELIMIT));
 		}
 		IEnumerator Timer(float time)
 		{
-			for (float i = 0;i < time;i += Time.deltaTime)
+			int prevTimerValue = -1;
+			for (float i = time; i >= 0;i -= Time.deltaTime)
 			{
-				timerText.text = Mathf.RoundToInt(time - i).ToString();
+				int tt = Mathf.RoundToInt(i);
+				if (tt != prevTimerValue)
+				{
+					prevTimerValue = tt;
+					int ones = tt % 10;
+					tt /= 10;
+					int tens = tt;
+					timerText.text = tens.ToString() + ones.ToString();
+				}
 				yield return new WaitForEndOfFrame();
 			}
 			OnOKButton();
+		}
+		IEnumerator ButtonTransition()
+		{
+			for (float i = 0;i < 1;i += Time.deltaTime)
+			{
+				ButtonChangeTranslation(transitionCurve.Evaluate( i));
+				yield return new WaitForEndOfFrame();
+			}
+		}
+		public void ButtonChangeTranslation(float t)
+		{
+			buttonTransform.offsetMin = new Vector2(buttonTransform.offsetMax.x - buttonTransform.rect.height*(1+t), buttonTransform.offsetMin.y);
+			tickImageTransform.anchorMax = Vector2.Lerp(Vector2.one, new Vector2(0.5f, 1), t);
+			timerTextTransform.localScale = Vector3.one * t;
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace UI
 	public class UIMoveMode : MonoBehaviour
 	{
 		public Text timerText;
-		private bool finish;
+		private bool clicked;
 
 		private void Awake()
 		{
@@ -16,14 +16,23 @@ namespace UI
 		}
 		public void SetDeadline(float time)
 		{
-			finish = false;
+			clicked = false;
 			StartCoroutine(Timer(time));
 		}
 		IEnumerator Timer(float time)
 		{
+			int prevTime = -1;
 			for (float i = 0; i < time; i += Time.deltaTime)
 			{
-				timerText.text = Mathf.RoundToInt(time - i).ToString();
+				int t = Mathf.RoundToInt(time - i);
+				if (t != prevTime)
+				{
+					prevTime = t;
+					int ones = t % 10;
+					t /= 10;
+					int tens = t;
+					timerText.text = tens.ToString()+ones.ToString();
+				}
 				yield return new WaitForEndOfFrame();
 			}
 			OnFinishButtonClick();
@@ -34,8 +43,13 @@ namespace UI
 		}
 		public void OnFinishButtonClick()
 		{
-			StopAllCoroutines();
-			EventHandle.FinishTurnLocal();
+			if (!clicked)
+			{
+				StopAllCoroutines();
+				EventHandle.FinishTurnLocal();
+				GameFlow.uiSpawnUnit.Close();
+				clicked = true;
+			}
 		}
 	}
 }

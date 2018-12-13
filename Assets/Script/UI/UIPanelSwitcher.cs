@@ -8,6 +8,9 @@ namespace UI
 	{
 		public UIMode uiMode;
 		public RectTransform[] panels;
+		public AnimationCurve closePanel;
+		public AnimationCurve openPanel;
+		public float switchSpeed;
 		private RectTransform currentPanel;
 
 		private void Awake()
@@ -17,6 +20,8 @@ namespace UI
 		public void SwitchUIMode(UIMode mode)
 		{
 			uiMode = mode;
+			GameFlow.timer.CloseTime();
+			GameFlow.uiSpawnUnit.Close();
 			for (int i = 0; i < panels.Length; i++)
 			{
 				panels[i].gameObject.SetActive(false);
@@ -34,10 +39,10 @@ namespace UI
 			if (prevPanel != null)
 			{
 				prevPanel.gameObject.SetActive(true);
-				for (float i = 0; i < 1; i += Time.deltaTime*8)
+				for (float i = 0; i < 1; i += Time.deltaTime*switchSpeed)
 				{
-					prevPanel.anchorMax = Vector2.right + Vector2.up * (1 - i);
-					prevPanel.anchorMin = Vector2.up * -i;
+					prevPanel.anchorMax = Vector2.right + Vector2.up * closePanel.Evaluate(i);
+					prevPanel.anchorMin = Vector2.up * (closePanel.Evaluate(i)-1);
 					yield return new WaitForEndOfFrame();
 				}
 				prevPanel.gameObject.SetActive(false);
@@ -45,10 +50,10 @@ namespace UI
 			if (newPanel != null)
 			{
 				newPanel.gameObject.SetActive(true);
-				for (float i = 0; i < 1; i += Time.deltaTime*8)
+				for (float i = 0; i < 1; i += Time.deltaTime*switchSpeed)
 				{
-					newPanel.anchorMax = Vector2.right + Vector2.up * i;
-					newPanel.anchorMin = Vector2.up * (-1 + i);
+					newPanel.anchorMax = Vector2.right + Vector2.up * openPanel.Evaluate(i);
+					newPanel.anchorMin = Vector2.up * (-1 + openPanel.Evaluate(i));
 					yield return new WaitForEndOfFrame();
 				}
 				newPanel.anchorMax = Vector2.right + Vector2.up;

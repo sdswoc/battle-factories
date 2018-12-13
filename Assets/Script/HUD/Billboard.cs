@@ -11,15 +11,6 @@ public class Billboard : MonoBehaviour
 	private new Transform transform;
 	private TextMesh tMesh;
 
-	private void Awake()
-	{
-		tMesh = GetComponent<TextMesh>();
-		transform = GetComponent<Transform>();
-	}
-	private void Start()
-	{
-
-	}
 	public void Spawn(string text,Vector2 position)
 	{
 		tMesh = GetComponent<TextMesh>();

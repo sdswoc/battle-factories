@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Multiplayer;
 
-public class Factory : MonoBehaviour 
+public class Factory : MonoBehaviour
 {
 	public GridRectangle rectangle;
 	public Vector2Int position;
 	public UnitType type;
-	public GameObject[] units;
+	public GameObject[] unitObjects;
 	public bool established;
 	private static int idGeneratorIndex;
 
@@ -66,6 +66,8 @@ public class Factory : MonoBehaviour
 	}
 	public void Setup(Vector2Int position)
 	{
+		GetComponent<Unit>().Spawn(position, type, GetID());
+		Debug.Log("Setip");
 		MoveToPosition(position);
 		GameFlow.map.RegisterObstacle(rectangle);
 		established = true;
@@ -79,7 +81,7 @@ public class Factory : MonoBehaviour
 		{
 			for (int j = 0; j < GameFlow.map.height; j++)
 			{
-				if (!GameFlow.map.GetObstacle(new Vector2Int(i, j)))
+				if (!GameFlow.map.GetObstacle(new Vector2Int(i, j)) && new Vector2(i,j) != position)
 				{
 					if ((position - new Vector2Int(i, j)).sqrMagnitude < distance)
 					{
@@ -92,21 +94,20 @@ public class Factory : MonoBehaviour
 		}
 		return samplePosition;
 	}
-	public Unit CreateUnit(byte unitIndex)
+	public Troop CreateUnit(byte unitIndex)
 	{
 		return CreateUnit(unitIndex, GetID());
 	}
-	public Unit CreateUnit(byte unitIndex,int id)
+	public Troop CreateUnit(byte unitIndex,int id)
 	{
 		return CreateUnit(GetNearestEmptyLocation(), unitIndex, id);
 	}
-	public Unit CreateUnit(Vector2Int postion,byte unitIndex,int id)
+	public Troop CreateUnit(Vector2Int postion,byte unitIndex,int id)
 	{
-		Unit u = Instantiate(units[unitIndex % units.Length]).GetComponent<Unit>();
+		Troop u = Instantiate(unitObjects[unitIndex % unitObjects.Length]).GetComponent<Troop>();
 		u.Spawn(postion, type, id);
 		return u;
 	}
-
 	public static int GetID()
 	{
 		idGeneratorIndex++;

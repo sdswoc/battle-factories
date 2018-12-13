@@ -14,17 +14,19 @@ namespace UI
 		}
 		public void Wait(float time)
 		{
-			StartCoroutine(Timer(time));
+			GameFlow.timer.StartTimer(time);
 		}
+		/*
 		private IEnumerator Timer(float time)
 		{
+		
 			text.text = time.ToString();
 			for (float i = 0; i < time; i += Time.deltaTime)
 			{
 				text.text = Mathf.RoundToInt(time - i).ToString();
 				yield return new WaitForEndOfFrame();
 			}
-			text.text = "Wait";
-		}
+			text.text = "Wait
+		}*/
 	}
 }
