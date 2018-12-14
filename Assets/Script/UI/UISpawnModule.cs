@@ -61,13 +61,16 @@ namespace UI
 		}
 		public void OnButton()
 		{
-			if (opened)
+			if (!GameFlow.unitSelector.IsCommandingUnit())
 			{
-				Close();
-			}
-			else
-			{
-				Open();
+				if (opened)
+				{
+					Close();
+				}
+				else
+				{
+					Open();
+				}
 			}
 		}
 		public void OnSpawnButton(int i)

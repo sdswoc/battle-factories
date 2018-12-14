@@ -105,6 +105,7 @@ namespace Control
 		public void KeyPressed(Vector2 position)
 		{
 			triggerReleaseEvent = true;
+			GameFlow.uiSpawnUnit.Close();
 			selection = GetUnit(position, UnitType.Friendly);
 			if (selection == null)
 			{
@@ -138,7 +139,9 @@ namespace Control
 					}
 				}
 				Select(selection);
+				triggerReleaseEvent = false;
 			}
+			Select(null);
 		}
 
 		public void KeyMoved(Vector2 position)
@@ -298,6 +301,11 @@ namespace Control
 			{
 				gameObject.SetActive(false);
 			}
+		}
+
+		public bool IsCommandingUnit()
+		{
+			return triggerReleaseEvent && (selection != null);
 		}
 	}
 }
