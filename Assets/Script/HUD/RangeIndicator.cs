@@ -6,6 +6,8 @@ namespace HUD
 	{
 		public int detail;
 		public Troop unit;
+		public Material friendlyMaterial;
+		public Material enemyMaterial;
 		private Mesh mesh;
 		private void Awake()
 		{
@@ -25,6 +27,17 @@ namespace HUD
 			mesh.RecalculateNormals();
 			mesh.RecalculateBounds();
 			GetComponent<MeshFilter>().mesh = mesh;
+		}
+		public void UpdateMaterial()
+		{
+			if (unit.type == UnitType.Enemy)
+			{
+				GetComponent<MeshRenderer>().material = enemyMaterial;
+			}
+			else
+			{
+				GetComponent<MeshRenderer>().material = friendlyMaterial;
+			}
 		}
 	}
 }

@@ -38,6 +38,8 @@ public class GameFlow
 	public static List<Unit> units = new List<Unit>();
 	public static Timer timer;
 	public static FireIndicator fireIndicator;
+	public static UIFinishPanel finishPanel;
+	public static UICurtain uiCurtain;
 	public static int money;
 	public static int fuel;
 	public static int moneyRate = 5;

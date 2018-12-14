@@ -154,7 +154,7 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void DamageUnit(Unit unit,int deltaHP)
 	{
-		unit.hp += deltaHP;
+		unit.finalHp += deltaHP;
 		//GameFlow.billboardManager.Spawn(deltaHP.ToString(), unit.position);
 	}
 	public static void SetResource(int money,int fuel)

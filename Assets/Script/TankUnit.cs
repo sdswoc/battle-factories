@@ -45,7 +45,8 @@ public class TankUnit : Troop
 		}
 		turret.eulerAngles = new Vector3(0, 0, angle-90);
 		Projectile p = SimplePool.Spawn(projectile, Vector3.zero, Quaternion.identity).GetComponent<Projectile>();
-		p.Launch(barrelTip.position, unit.position);
+		p.Launch(barrelTip.position, unit.position,unit);
+		p.damage = damage;
 		for (float i = 0; i < fireTime; i += Time.deltaTime)
 		{
 			barrel.localPosition = new Vector3(barrel.localPosition.x, -recoilCurve.Evaluate(i / fireTime)*turretRecoil, barrel.localPosition.z);

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using Pathfinding;
+using HUD;
 
 public class Troop : Unit
 {
@@ -13,6 +14,7 @@ public class Troop : Unit
 	public int damage;
 	public int fuelConsumption;
 	public float attackTime;
+	public RangeIndicator rangeIndicator;
 
 	private List<PathNode> path = new List<PathNode>();
 	public static List<Unit> attackList = new List<Unit>();
@@ -27,6 +29,7 @@ public class Troop : Unit
 		base.Spawn(position, type, id);
 		selectable = true;
 		path = new List<PathNode>();
+		rangeIndicator.UpdateMaterial();
 	}
 	
 	public override void Despawn()

@@ -11,12 +11,12 @@ public class Projectile : MonoBehaviour
 	public AnimationCurve curveVerical;
 	private new Transform transform;
 	public static List<Projectile> list = new List<Projectile>();
-	public void Launch(Vector2 from,Vector2 to)
+	public void Launch(Vector2 from,Vector2 to,Unit unit)
 	{
 		transform = GetComponent<Transform>();
-		StartCoroutine(Animate(from, to));
+		StartCoroutine(Animate(from, to,unit));
 	}
-	private IEnumerator Animate(Vector2 from,Vector2 to)
+	private IEnumerator Animate(Vector2 from,Vector2 to,Unit unit)
 	{
 		float distance = (to - from).magnitude;
 		list.Add(this);
@@ -31,6 +31,7 @@ public class Projectile : MonoBehaviour
 		}
 		GameFlow.billboardManager.Spawn(damage.ToString(), to);
 		list.Remove(this);
+		unit.hpIndicator.UpdateMesh();
 		SimplePool.Despawn(gameObject);
 	}
 }

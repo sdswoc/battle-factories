@@ -19,7 +19,8 @@ namespace View
 		private Vector2 virtualXAxis;
 		private Vector2 virtualYAxis;
 		private Vector2[] mapControlPoints = new Vector2[4];
-		private Vector2 cameraResolution;
+		[HideInInspector]
+		public Vector2 cameraResolution;
 
 		private void Awake()
 		{
@@ -119,6 +120,12 @@ namespace View
 		public void Zoom(float size)
 		{
 			camera.orthographicSize = Mathf.Clamp(camera.orthographicSize * (1 - size / ((cameraResolution.x + cameraResolution.y) * 0.5f)), minZoomFactor, maxZoomFactor);
+		}
+
+		public void Focus(Vector2 focus)
+		{
+			Vector2 current = TransformCameraToWorld(new Vector2(cameraResolution.x, cameraResolution.y) * 0.5f);
+			camera.GetComponent<Transform>().Translate(focus - current);
 		}
 		
 		private void OnDrawGizmos()

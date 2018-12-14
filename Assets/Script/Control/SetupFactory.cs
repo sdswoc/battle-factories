@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Multiplayer;
 public class SetupFactory : MonoBehaviour, IControl
 {
+	public GameObject factoryObject;
 	public Factory factory;
 	public Button okButton;
 	public int detail;
@@ -28,6 +29,11 @@ public class SetupFactory : MonoBehaviour, IControl
 	{
 		transform = GetComponent<Transform>();
 		GameFlow.setupFactory = this;
+		GameFlow.friendlyFactory = factory = Instantiate(factoryObject).GetComponent<Factory>();
+		factory.type = UnitType.Friendly;
+		GameFlow.enemyFactory = Instantiate(factoryObject).GetComponent<Factory>();
+		GameFlow.enemyFactory.type = UnitType.Enemy;
+		GameFlow.enemyFactory.gameObject.SetActive(false);
 		mesh = new Mesh();
 		GetComponent<MeshFilter>().mesh = mesh;
 		GenerateCircleMesh(mesh, circleRadius, circleRadius + stripWidth, detail);

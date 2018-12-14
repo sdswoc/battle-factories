@@ -48,7 +48,6 @@ namespace UI
 			initialRectangle = scrollViewTranform.rect;
 			float width = transform.rect.width;
 			float height = width / itemRatio;
-			Debug.Log(width);
 			
 			for (int i = 0;i < transform.childCount;i++)
 			{

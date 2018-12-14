@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FireControl : MonoBehaviour 
 {
@@ -20,7 +21,6 @@ public class FireControl : MonoBehaviour
 		StopAllCoroutines();
 		StartCoroutine(TempFire(myTurn));
 	}
-
 	IEnumerator TempFire(bool myTurn)
 	{
 		GameFlow.fireIndicator.StartFire();
@@ -49,7 +49,6 @@ public class FireControl : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 		EventHandle.FinishFire(myTurn);
 	}
-
 	public void EvaluateHP(Vector2Int[] hps,bool myTurn)
 	{
 		for (int i = 0;i < hps.Length;i++)
@@ -76,14 +75,71 @@ public class FireControl : MonoBehaviour
 		yield return new WaitUntil(() => Projectile.list.Count <= 0);
 		for (int i = 0;i < GameFlow.units.Count;i++)
 		{
+			GameFlow.units[i].hp = GameFlow.units[i].finalHp;
+			GameFlow.units[i].hpIndicator.UpdateMesh();
 			if (GameFlow.units[i].hp <= 0)
 			{
 				GameFlow.units[i].Despawn();
 				i--;
 			}
 		}
+		yield return new WaitForEndOfFrame();
+		bool friendly = GameFlow.friendlyFactory.GetComponent<Unit>().hp <= 0;
+		bool enemy = GameFlow.enemyFactory.GetComponent<Unit>().hp <= 0;
+		if (friendly)
+		{
+			Factory f = GameFlow.friendlyFactory;
+			GameFlow.cameraInput.active = false;
+			GameFlow.cameraControl.Focus((Vector2)f.position);
+			for (float i = 0;i < 1;i += Time.deltaTime)
+			{
+				f.GetComponent<Transform>().position = (Vector3)(Vector2)f.position + Vector3.forward * i * 3;
+				yield return new WaitForEndOfFrame();
+			}
+			yield return new WaitForSeconds(0.8f);
+		}
+
+		if (enemy)
+		{
+			Factory f = GameFlow.enemyFactory;
+			GameFlow.cameraInput.active = false;
+			GameFlow.cameraControl.Focus((Vector2)f.position);
+			for (float i = 0; i < 1; i += Time.deltaTime)
+			{
+				f.GetComponent<Transform>().position = (Vector3)(Vector2)f.position + Vector3.forward * i * 3;
+				yield return new WaitForEndOfFrame();
+			}
+		}
+
+		yield return new WaitForSeconds(0.8f);
+
+		if (friendly && !enemy)
+		{
+			yield return StartCoroutine(ShowFinishMessage(1));
+		}
+		else if (!friendly && enemy)
+		{
+			yield return StartCoroutine(ShowFinishMessage(0));
+		}
+		else if (friendly && enemy)
+		{
+			yield return StartCoroutine(ShowFinishMessage(2));
+		}
+
 		GameFlow.fireIndicator.CloseFire();
 		EventHandle.SetTurn(!myTurn);
+	}
+	public IEnumerator ShowFinishMessage(int code)
+	{
+		yield return new WaitForEndOfFrame();
+		GameFlow.timer.CloseTime();
+		GameFlow.fireIndicator.CloseFire();
+		GameFlow.cameraInput.active = false;
+		GameFlow.finishPanel.gameObject.SetActive(true);
+		yield return StartCoroutine(GameFlow.finishPanel.Show(code));
+		GameFlow.uiCurtain.gameObject.SetActive(true);
+		yield return StartCoroutine(GameFlow.uiCurtain.Close());
+		SceneManager.LoadScene("MainMenu");
 	}
 }
 public struct FireEvent

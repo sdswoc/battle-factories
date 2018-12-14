@@ -12,19 +12,6 @@ public class Factory : MonoBehaviour
 	public bool established;
 	private static int idGeneratorIndex;
 
-
-	private void Awake()
-	{
-		if (type == UnitType.Friendly)
-		{
-			GameFlow.friendlyFactory = this;
-		}
-		else
-		{
-			GameFlow.enemyFactory = this;
-			gameObject.SetActive(false);
-		}
-	}
 	public void MoveToPosition(Vector2Int position)
 	{
 		if (!established)

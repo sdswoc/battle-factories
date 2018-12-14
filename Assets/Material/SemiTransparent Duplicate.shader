@@ -1,4 +1,4 @@
-﻿Shader "Custom/SemiTransparent"
+﻿Shader "Custom/SemiTransparentDuplicate"
 {
     Properties
     {
@@ -19,7 +19,6 @@ ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
             Stencil {
                 Ref 0
                 Comp Equal
-
                 Pass IncrSat 
                 Fail IncrSat 
             }

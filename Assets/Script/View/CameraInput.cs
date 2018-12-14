@@ -9,6 +9,7 @@ namespace View
 {
 	public class CameraInput : MonoBehaviour
 	{
+		public bool active = true;
 		public bool touchControl;
 		public float mouseMovementFactor;
 		public float mouseZoomFactor;
@@ -225,10 +226,13 @@ namespace View
 
 		private void PanUpdate(Vector2 position)
 		{
-			Vector2 newTargetPosition = cameraControl.TransformCameraToWorld(position);
-			cameraControl.Translate(targetPosition - newTargetPosition);
-			cameraControl.UpdateControlPoints();
-			cameraControl.AdjustPosition();
+			if (active)
+			{
+				Vector2 newTargetPosition = cameraControl.TransformCameraToWorld(position);
+				cameraControl.Translate(targetPosition - newTargetPosition);
+				cameraControl.UpdateControlPoints();
+				cameraControl.AdjustPosition();
+			}
 		}
 
 		private void ZoomUpdate(float distance)
