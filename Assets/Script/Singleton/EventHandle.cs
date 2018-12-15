@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Multiplayer;
+using UnityEngine.SceneManagement;
 
 public class EventHandle : MonoBehaviour 
 {
@@ -180,5 +181,14 @@ public class EventHandle : MonoBehaviour
 	{
 		GameFlow.fuelLimit += 5;
 		GameFlow.uIResourceCounter.StateUpdate();
+	}
+	public static void GoToMainMenu()
+	{
+		SceneManager.LoadScene("TempMainMenu");
+		Socket.Reset();
+		GridRectangle.list.Clear();
+		Projectile.list.Clear();
+		pathNodes.Clear();
+		GameFlow.units.Clear();
 	}
 }

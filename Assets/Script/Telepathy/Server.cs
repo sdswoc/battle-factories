@@ -76,7 +76,7 @@ namespace Telepathy
 			}
 			catch (Exception e)
 			{
-				return "127.0.0.1";
+				return "noip";
 			}
 		}
 		// the listener thread's listen function

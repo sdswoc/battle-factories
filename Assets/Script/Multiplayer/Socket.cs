@@ -11,6 +11,7 @@ namespace Multiplayer
 	{
 		public static Action OnConnected;
 		public static Action OnDisconnected;
+		public static Action OnBeaconListUpdated;
 		public static Action<Packet> OnData;
 		public static Action<string,int> OnListenerStarted;
 		public static SocketType socketType;
@@ -19,13 +20,18 @@ namespace Multiplayer
 		private static Beacon beacon;
 		private static Probe probe;
 		private static int connectionID = -1;
+		public static string playerName;
 		private const  string BEACON_TEXT = "battle-factories";
+		public static List<BeaconLocation> beaconLocations = new List<BeaconLocation>();
 		public static string StartServer()
 		{
 			SetLogger();
+			connectionID = -1;
 			server = new Server();
+			client?.Disconnect();
 			client = null;
 			server.ListenerStarted += ListenerStarted;
+
 			server.Start(0, 1);
 			socketType = SocketType.Server;
 			return server.GetLocalIPAddress();
@@ -38,6 +44,7 @@ namespace Multiplayer
 		public static void StartClient(string address,int port)
 		{
 			SetLogger();
+			server?.Stop();
 			server = null;
 			client = new Client();
 			client.Connect(address, port);
@@ -51,6 +58,8 @@ namespace Multiplayer
 		public static void ConnectEvent()
 		{
 			OnConnected?.Invoke();
+			beacon?.Stop();
+			beacon?.Dispose();
 		}
 		public static void DisconnectEvent()
 		{
@@ -91,7 +100,7 @@ namespace Multiplayer
 			OnListenerStarted?.Invoke(address,port);
 			beacon?.Dispose();
 			beacon = new Beacon(BEACON_TEXT, (ushort)port);
-			beacon.BeaconData = "Hola Friends";
+			beacon.BeaconData = playerName ?? "Unnamed Player";
 			beacon.Start();
 		}
 		public static void StartProbe()
@@ -101,15 +110,56 @@ namespace Multiplayer
 			probe.BeaconsUpdated += OnBeaconFound;
 			probe.Start();
 		}
+		public static void StopProbe()
+		{
+			probe?.Stop();
+			probe?.Dispose();
+			probe = null;
+		}
+		public static void StopBeacon()
+		{
+			beacon?.Stop();
+			beacon?.Dispose();
+			beacon = null;
+		}
 		public static void OnBeaconFound(IEnumerable<BeaconLocation> beacons)
 		{
+			List<BeaconLocation> list = new List<BeaconLocation>();
 			foreach (BeaconLocation beacon in beacons)
 			{
+				Debug.Log("Beacon found " + beacon.Address);
+				list.Add(beacon);
+				/*
 				StartClient(beacon.Address.Address.ToString(), beacon.Address.Port);
-				probe?.Stop();
-				probe?.Dispose();
-				probe = null;
+StopProbe();*/
 			}
+			if (list.Count != beaconLocations.Count)
+			{
+				beaconLocations = list;
+				OnBeaconListUpdated?.Invoke();
+				Debug.Log("unequal");
+				return;
+			}
+			for (int i = 0;i < list.Count;i++)
+			{
+				bool found = false;
+				for (int j = 0;j < beaconLocations.Count;j++)
+				{
+					if (beaconLocations[j].Address.ToString().Equals(list[i].Address.ToString()) && beaconLocations[j].Data == list[i].Data)
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					beaconLocations = list;
+					OnBeaconListUpdated?.Invoke();
+					Debug.Log("Different");
+					return;
+				}
+			}
+			
 		}
 		public static void SetLogger()
 		{
@@ -122,7 +172,15 @@ namespace Multiplayer
 			server?.Send(connectionID, packet?.data?.ToArray());
 			client?.Send(packet?.data?.ToArray());
 		}
-
+		public static void Reset()
+		{
+			server?.Stop();
+			client?.Disconnect();
+			beacon?.Stop();
+			beacon?.Dispose();
+			probe?.Stop();
+			probe?.Dispose();
+		}
 	}
 	public enum SocketType
 	{

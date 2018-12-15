@@ -14,7 +14,7 @@ public class HealthIndicator : MonoBehaviour
 	public Unit unit;
 	private Mesh mesh;
 	private int previousHP;
-	private float angle = -90+15; // Set According to camera angle
+	private float angle = -90+45; // Set According to camera angle
 	private new Transform transform;
 
 	private void Awake()
@@ -26,6 +26,7 @@ public class HealthIndicator : MonoBehaviour
 	private void Update()
 	{
 		transform.eulerAngles = new Vector3(0, 0, angle);
+		//UpdateMesh();
 	}
 
 	public void UpdateMesh()

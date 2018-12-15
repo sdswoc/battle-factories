@@ -10,6 +10,13 @@ namespace Multiplayer
 		{
 			Socket.OnData += DataEvent;
 			Socket.OnDisconnected += DisconnectEvent;
+			Socket.OnConnected += ConnectEvent;
+		}
+		private void OnDestroy()
+		{
+			Socket.OnData -= DataEvent;
+			Socket.OnDisconnected -= DisconnectEvent;
+			Socket.OnConnected -= ConnectEvent;
 		}
 		private void Update()
 		{
@@ -22,7 +29,28 @@ namespace Multiplayer
 		}
 		private void DisconnectEvent()
 		{
-			Application.Quit();
+			StartCoroutine(DisconnectCrorutine());
+			//Application.Quit();
+		}
+		private void ConnectEvent()
+		{
+			NetworkEventSend.NameSync(GameFlow.friendlyName ?? "Unnamed Player");
+		}
+		private IEnumerator DisconnectCrorutine()
+		{
+			yield return new WaitForEndOfFrame();
+			if (!GameFlow.finishPanel.showing)
+			{
+				GameFlow.timer.CloseTime();
+				GameFlow.fireIndicator.CloseFire();
+				GameFlow.cameraInput.active = false;
+				GameFlow.disconnectPanel.gameObject.SetActive(true);
+				GameFlow.SetMode(Control.UIMode.None);
+				yield return StartCoroutine(GameFlow.disconnectPanel.Show());
+				GameFlow.uiCurtain.gameObject.SetActive(true);
+				yield return StartCoroutine(GameFlow.uiCurtain.Close());
+				EventHandle.GoToMainMenu();
+			}
 		}
 		private void DataEvent(Packet packet)
 		{

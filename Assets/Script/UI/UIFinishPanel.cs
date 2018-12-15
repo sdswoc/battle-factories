@@ -8,11 +8,13 @@ public class UIFinishPanel : MonoBehaviour
 	public float showTime;
 	public AnimationCurve animationCurve;
 	public GameObject[] objects;
+	public bool showing;
 	private bool clicked;
 
 	void Awake()
 	{
 		GameFlow.finishPanel = this;
+		showing = false;
 		gameObject.SetActive(false);
 	}
 	public void OnButtonClick()
@@ -21,6 +23,7 @@ public class UIFinishPanel : MonoBehaviour
 	}
 	public IEnumerator Show(int code)
 	{
+		showing = true;
 		for (int i = 0;i < objects.Length;i++)
 		{
 			if (i == code)

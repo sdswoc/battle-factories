@@ -17,13 +17,17 @@ public class Troop : Unit
 	public RangeIndicator rangeIndicator;
 
 	private List<PathNode> path = new List<PathNode>();
-	public static List<Unit> attackList = new List<Unit>();
+	public List<Unit> attackList = new List<Unit>();
 
 	public void Awake()
 	{
 		//Spawn(new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y)),type,unitID);
 	}
 
+	private void OnDestroy()
+	{
+		GameFlow.units.Remove(this);
+	}
 	public override void Spawn(Vector2Int position,UnitType type,int id)
 	{
 		base.Spawn(position, type, id);

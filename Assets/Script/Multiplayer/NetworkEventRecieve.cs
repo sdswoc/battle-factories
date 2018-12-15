@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Multiplayer
 {
@@ -55,6 +56,14 @@ namespace Multiplayer
 			EventHandle.SyncHP(data);
 		}
 
+		// Code = 7
+		public static void NameSync(string name)
+		{
+			Debug.Log("NameSync");
+			GameFlow.enemyName = name;
+			SceneManager.LoadScene("SampleScene");
+		}
+
 		public static void RecieveEvent(Packet p)
 		{
 			byte opCode = p.ReadByte();
@@ -77,6 +86,9 @@ namespace Multiplayer
 					break;
 				case 6:
 					HPSync(p);
+					break;
+				case 7:
+					NameSync(p.ReadString());
 					break;
 			}
 

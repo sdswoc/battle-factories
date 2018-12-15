@@ -65,6 +65,36 @@ public class TankUnit : Troop
 		base.Despawn();
 		StartCoroutine(Destroy());
 	}
+	public override void GenerateAttackList()
+	{
+		attackList.Clear();
+		for (int i = 0; i < GameFlow.units.Count; i++)
+		{
+			Unit unit = GameFlow.units[i];
+			if (unit.unitID != unitID)
+			{
+				if (unit.type != type)
+				{
+					if ((unit.position - position).sqrMagnitude <= viewRadius * viewRadius)
+					{
+						bool valid = true;
+						for (int ii = 0;ii < GridRectangle.list.Count;ii++)
+						{
+						if (GridRectangle.list[ii].LineTest(position,unit.position))
+							{
+							if (GridRectangle.list[ii].GetComponent<Unit>() != unit)
+								valid = false;
+							}
+						}
+						if (valid)
+						{
+							attackList.Add(unit);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	public IEnumerator Destroy()
 	{

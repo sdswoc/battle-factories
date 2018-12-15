@@ -19,9 +19,10 @@ ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
             Stencil {
                 Ref 0
                 Comp Equal
-
-                Pass IncrSat 
-                Fail IncrSat 
+				ReadMask 1
+				WriteMask 1
+                Pass Invert 
+                Fail Keep 
             }
 
             CGPROGRAM

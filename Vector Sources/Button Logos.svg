@@ -15,7 +15,10 @@
    version="1.1"
    id="svg4574"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Button Logos.svg">
+   sodipodi:docname="Button Logos.svg"
+   inkscape:export-filename="C:\Users\Simpu\Desktop\Money Upgrade Icon.png"
+   inkscape:export-xdpi="97.440048"
+   inkscape:export-ydpi="97.440048">
   <defs
      id="defs4568">
     <inkscape:perspective
@@ -33,18 +36,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.94280902"
-     inkscape:cx="206.50062"
-     inkscape:cy="160.99418"
+     inkscape:zoom="1.2648148"
+     inkscape:cx="679.86057"
+     inkscape:cy="195.98587"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      inkscape:pagecheckerboard="true"
-     inkscape:window-width="1600"
-     inkscape:window-height="837"
-     inkscape:window-x="-8"
-     inkscape:window-y="52"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1592"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      objecttolerance="20"
      inkscape:snap-perpendicular="true"
@@ -72,7 +75,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -265,26 +268,44 @@
     <rect
        style="fill:none;fill-opacity:1;stroke:#fffffa;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect842"
-       width="26.458332"
-       height="26.458332"
-       x="4.4541798e-007"
-       y="217.62497"
+       width="52.916653"
+       height="52.916641"
+       x="211.66667"
+       y="244.08331"
        ry="0"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:export-xdpi="96.480042"
+       inkscape:export-ydpi="96.480042"
+       inkscape:export-filename="C:\Users\Simpu\Desktop\Money Upgrade Icon.png" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#fffffa;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 50 1620 A 49.999998 50.000019 0 0 0 0 1670 A 49.999998 50.000019 0 0 0 50 1720 A 49.999998 50.000019 0 0 0 100 1670 A 49.999998 50.000019 0 0 0 50 1620 z M 50 1645.875 A 24.124998 24.125009 0 0 1 74.125 1670 A 24.124998 24.125009 0 0 1 50 1694.125 A 24.124998 24.125009 0 0 1 25.875 1670 A 24.124998 24.125009 0 0 1 50 1645.875 z "
+       d="M 900 1731.625 A 88.374968 88.374991 0 0 0 811.625 1820 A 88.374968 88.374991 0 0 0 900 1908.375 A 88.374968 88.374991 0 0 0 909.32617 1907.8574 C 910.4727 1908.1882 911.68165 1908.375 912.9375 1908.375 L 975.4375 1908.375 C 982.60488 1908.375 988.375 1902.6049 988.375 1895.4375 L 988.375 1832.9375 C 988.375 1831.6085 988.17553 1830.3281 987.80664 1829.123 A 88.374968 88.374991 0 0 0 988.375 1820 A 88.374968 88.374991 0 0 0 900 1731.625 z M 900 1777.3594 A 42.64092 42.640931 0 0 1 942.64062 1820 L 912.9375 1820 C 905.77012 1820 900 1825.7701 900 1832.9375 L 900 1862.6406 A 42.64092 42.640931 0 0 1 857.35938 1820 A 42.64092 42.640931 0 0 1 900 1777.3594 z M 936.10352 1834.25 L 952.27148 1834.25 C 953.67901 1834.25 954.8125 1835.3835 954.8125 1836.791 L 954.8125 1853.5625 L 971.58398 1853.5625 C 972.99151 1853.5625 974.125 1854.696 974.125 1856.1035 L 974.125 1872.2715 C 974.125 1873.679 972.99151 1874.8125 971.58398 1874.8125 L 954.8125 1874.8125 L 954.8125 1891.584 C 954.8125 1892.9915 953.67901 1894.125 952.27148 1894.125 L 936.10352 1894.125 C 934.69599 1894.125 933.5625 1892.9915 933.5625 1891.584 L 933.5625 1874.8125 L 916.79102 1874.8125 C 915.38349 1874.8125 914.25 1873.679 914.25 1872.2715 L 914.25 1856.1035 C 914.25 1854.696 915.38349 1853.5625 916.79102 1853.5625 L 933.5625 1853.5625 L 933.5625 1836.791 C 933.5625 1835.3835 934.69599 1834.25 936.10352 1834.25 z "
        transform="matrix(0.26458333,0,0,0.26458333,0,-211.00002)"
        id="path844"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:export-filename="C:\Users\Simpu\Desktop\Money Upgrade Icon.png"
+       inkscape:export-xdpi="96.480042"
+       inkscape:export-ydpi="96.480042" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#b9c000;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect899"
+       width="52.916664"
+       height="52.916664"
+       x="52.916668"
+       y="191.16664"
+       inkscape:export-filename="C:\Users\Simpu\Desktop\Fuel Upgrade Icon.png"
+       inkscape:export-xdpi="97.440048"
+       inkscape:export-ydpi="97.440048" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#fffffa;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 50 1520 C 37.074835 1556.8883 -7.2088766e-006 1558.6916 0 1588 A 49.999997 31.999988 0 0 0 50 1620 A 49.999997 31.999988 0 0 0 100 1588 C 100 1560.0833 61.97744 1556.8265 50 1520 z "
-       transform="matrix(0.26458333,0,0,0.26458333,0,-211.00002)"
+       d="m 79.374999,193.74633 c -6.172701,17.61685 -23.878645,18.47806 -23.878645,32.47496 a 23.878639,15.282324 0 0 0 23.878645,15.28233 23.878639,15.282324 0 0 0 2.694275,-0.10633 c 0.273086,0.0669 0.557302,0.10633 0.851611,0.10633 h 16.786874 c 1.964371,0 3.545881,-1.58151 3.545881,-3.54588 v -11.73645 -5.05043 c 0,-1.8515 -1.40518,-3.36154 -3.21149,-3.5291 -5.479239,-6.67883 -16.451152,-10.93267 -20.667151,-23.89543 z m 9.839681,28.04248 h 4.199284 c 0.36557,0 0.659927,0.29438 0.659927,0.65994 v 4.35599 h 4.355988 c 0.365575,0 0.659927,0.29435 0.659927,0.65991 v 4.1993 c 0,0.36555 -0.294352,0.65991 -0.659927,0.65991 h -4.355988 v 4.35599 c 0,0.36558 -0.294357,0.65993 -0.659927,0.65993 H 89.21468 c -0.365571,0 -0.659927,-0.29435 -0.659927,-0.65993 v -4.35599 h -4.355988 c -0.365568,0 -0.659927,-0.29436 -0.659927,-0.65991 v -4.1993 c 0,-0.36556 0.294359,-0.65991 0.659927,-0.65991 h 4.355988 v -4.35599 c 0,-0.36556 0.294356,-0.65994 0.659927,-0.65994 z"
        id="path849"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Users\Simpu\Desktop\Fuel Upgrade Icon.png"
+       inkscape:export-xdpi="97.440048"
+       inkscape:export-ydpi="97.440048" />
+    <path
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#b9c000;stroke-width:5.29166651;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       d="m 285.86088,224.38179 -14.55274,10.28711 a 5.2921958,5.2921958 0 1 0 6.10938,8.64258 l 8.46484,-5.98438 8.25977,5.79688 a 5.2922866,5.2922866 0 1 0 6.08007,-8.66406 z"
+       id="path867-0"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

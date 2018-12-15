@@ -47,6 +47,7 @@ namespace BeaconLib
 
         public void Stop()
         {
+			UnityEngine.Debug.Log("Stop");
             Stopped = true;
         }
 

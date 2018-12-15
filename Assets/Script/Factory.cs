@@ -10,7 +10,8 @@ public class Factory : MonoBehaviour
 	public UnitType type;
 	public GameObject[] unitObjects;
 	public bool established;
-	private static int idGeneratorIndex;
+	public CloudTrigger cloudTrigger;
+	private int idGeneratorIndex;
 
 	public void MoveToPosition(Vector2Int position)
 	{
@@ -58,6 +59,7 @@ public class Factory : MonoBehaviour
 		MoveToPosition(position);
 		GameFlow.map.RegisterObstacle(rectangle);
 		established = true;
+		cloudTrigger.Show();
 	}
 	public Vector2Int GetNearestEmptyLocation()
 	{
@@ -95,7 +97,7 @@ public class Factory : MonoBehaviour
 		u.Spawn(postion, type, id);
 		return u;
 	}
-	public static int GetID()
+	public int GetID()
 	{
 		idGeneratorIndex++;
 		return ((int)Socket.socketType | (idGeneratorIndex++ << 1));

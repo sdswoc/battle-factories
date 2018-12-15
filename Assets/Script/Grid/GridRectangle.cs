@@ -8,6 +8,16 @@ public class GridRectangle : MonoBehaviour
 	public Vector2Int size;
 	public bool register;
 
+	public static List<GridRectangle> list = new List<GridRectangle>();
+
+	private void Awake()
+	{
+		list.Add(this);
+	}
+	private void OnDestroy()
+	{
+		list.Remove(this);
+	}
 	private void Start()
 	{
 		if (register)
@@ -19,10 +29,64 @@ public class GridRectangle : MonoBehaviour
 	{
 		transform.position = (Vector2)position;
 	}
+	private Vector2Int Minimim()
+	{
+		return new Vector2Int(-1, -1) + (position * 2);
+	}
+	private Vector2Int Maximum()
+	{
+		return new Vector2Int(-1, -1) + (position+size) * 2;
+	}
 
+	public bool LineTest(Vector2Int start, Vector2Int end)
+	{
+		end *= 2;
+		start *= 2;
+		Vector2Int delta = end - start;
+		Vector2Int perpendicular = new Vector2Int(delta.y,-delta.x);
+		Vector2Int min = Minimim();
+		Vector2Int max = Maximum();
+		Vector2Int[] points = { min, new Vector2Int(max.x, min.y), max, new Vector2Int(min.x, max.y)  };
+		int squareMin, squareMax;
+		squareMax = squareMin = Dot(perpendicular, min);
+		for (int i = 0;i < points.Length;i++)
+		{
+			int tt = Dot(points[i], perpendicular);
+			squareMin = Mathf.Min(squareMin, tt);
+			squareMax = Mathf.Max(squareMax, tt);
+		}
+		int endPara = Dot(end, perpendicular);
+		int startPara = Dot(start, perpendicular);
+		if (endPara <= squareMin || endPara >= squareMax)
+		{
+			return false;
+		}
+		if (Mathf.Max(start.x,end.x) >= max.x && Mathf.Min(start.x, end.x) >= max.x)
+		{
+			return false;
+		}
+		if (Mathf.Max(start.x, end.x) <= min.x && Mathf.Min(start.x, end.x) <= min.x)
+		{
+			return false;
+		}
+		if (Mathf.Max(start.y, end.y) >= max.y && Mathf.Min(start.y, end.y) >= max.y)
+		{
+			return false;
+		}
+		if (Mathf.Max(start.y, end.y) <= min.y && Mathf.Min(start.y, end.y) <= min.y)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	private int Dot(Vector2Int a, Vector2Int b)
+	{
+		return a.x* b.x+a.y*b.y;	
+	}
 	private void OnDrawGizmos()
 	{
-		if (Application.isEditor)
+		if (!Application.isPlaying)
 		{
 			Setup();
 		}

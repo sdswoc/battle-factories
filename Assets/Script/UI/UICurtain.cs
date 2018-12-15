@@ -9,7 +9,7 @@ public class UICurtain : MonoBehaviour
 	public void Awake()
 	{
 		GameFlow.uiCurtain = this;
-		gameObject.SetActive(false);
+		StartCoroutine(OpenCoroutine());
 	}
 	public	IEnumerator Open()
 	{

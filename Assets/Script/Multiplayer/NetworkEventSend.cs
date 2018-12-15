@@ -78,5 +78,18 @@ namespace Multiplayer
 			}
 			Socket.Send(p);
 		}
+
+		// Code = 7
+		public static void NameSync(string name)
+		{
+			Debug.Log("Name SYnc");
+			Packet p = new Packet(7);
+			p.WriteInt(name.Length);
+			for (int i = 0;i < name.Length;i++)
+			{
+				p.WriteInt((byte)name[i]);
+			}
+			Socket.Send(p);
+		}
 	}
 }

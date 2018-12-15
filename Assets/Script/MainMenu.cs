@@ -23,7 +23,6 @@ public class MainMenu : MonoBehaviour
 		Socket.OnConnected += SwitchScene;
 		Socket.OnListenerStarted += OnListenerStarted;
 		text.text = Socket.StartServer();
-		
 	}
 	public void StartClient()
 	{

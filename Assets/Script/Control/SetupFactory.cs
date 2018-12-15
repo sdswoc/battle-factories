@@ -50,6 +50,10 @@ public class SetupFactory : MonoBehaviour, IControl
 		}
 		GetComponent<MeshRenderer>().enabled = (false);
 	}
+	void Start()
+	{
+		GameFlow.cameraControl.Focus(GameFlow.friendlyFactory.position);
+	}
 	public void KeyCanceled()
 	{
 		invokeReleaseEvent = false;

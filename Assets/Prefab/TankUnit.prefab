@@ -533,7 +533,7 @@ MonoBehaviour:
   hpIndicator: {fileID: 114108755920429544}
   viewRadius: 16
   selectionRadius: 1
-  speed: 2
+  speed: 6
   movementBlock: 16
   selectable: 1
   damage: -5

@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class FireControl : MonoBehaviour 
 {
-	public List<FireEvent> fireEvents = new List<FireEvent>();
-
 	private void Awake()
 	{
 		GameFlow.fireControl = this;
@@ -91,9 +89,11 @@ public class FireControl : MonoBehaviour
 			Factory f = GameFlow.friendlyFactory;
 			GameFlow.cameraInput.active = false;
 			GameFlow.cameraControl.Focus((Vector2)f.position);
+			f.cloudTrigger.Hide();
+			yield return new WaitForSeconds(0.3f);
 			for (float i = 0;i < 1;i += Time.deltaTime)
 			{
-				f.GetComponent<Transform>().position = (Vector3)(Vector2)f.position + Vector3.forward * i * 3;
+				f.GetComponent<Transform>().position = (Vector3)(Vector2)f.position + Vector3.forward * i * 2;
 				yield return new WaitForEndOfFrame();
 			}
 			yield return new WaitForSeconds(0.8f);
@@ -104,14 +104,20 @@ public class FireControl : MonoBehaviour
 			Factory f = GameFlow.enemyFactory;
 			GameFlow.cameraInput.active = false;
 			GameFlow.cameraControl.Focus((Vector2)f.position);
+			f.cloudTrigger.Hide();
+			yield return new WaitForSeconds(0.3f);
 			for (float i = 0; i < 1; i += Time.deltaTime)
 			{
-				f.GetComponent<Transform>().position = (Vector3)(Vector2)f.position + Vector3.forward * i * 3;
+				f.GetComponent<Transform>().position = (Vector3)(Vector2)f.position + Vector3.forward * i * 2;
 				yield return new WaitForEndOfFrame();
 			}
+			yield return new WaitForSeconds(0.8f);
 		}
 
-		yield return new WaitForSeconds(0.8f);
+		if (friendly || enemy)
+		{
+			yield return new WaitForSeconds(0.8f);
+		}
 
 		if (friendly && !enemy)
 		{
@@ -125,7 +131,6 @@ public class FireControl : MonoBehaviour
 		{
 			yield return StartCoroutine(ShowFinishMessage(2));
 		}
-
 		GameFlow.fireIndicator.CloseFire();
 		EventHandle.SetTurn(!myTurn);
 	}
@@ -139,7 +144,7 @@ public class FireControl : MonoBehaviour
 		yield return StartCoroutine(GameFlow.finishPanel.Show(code));
 		GameFlow.uiCurtain.gameObject.SetActive(true);
 		yield return StartCoroutine(GameFlow.uiCurtain.Close());
-		SceneManager.LoadScene("MainMenu");
+		EventHandle.GoToMainMenu();
 	}
 }
 public struct FireEvent
