@@ -124,63 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5afc8ac0a8d4ab489a5dd0c5bc54193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosion: {fileID: 1417528227708254, guid: 73e052df82c00d045b4ba35ca075f3e5, type: 2}
   speed: 16
+  baseObject: {fileID: 1890827085992992}
   damage: -5
-  heightGain: 0.5
-  curveHorizontal:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1.3749999
-      outSlope: 1.3749999
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.15
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.72222257
-      outSlope: 0.72222257
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33749998
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  curveVerical:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2.0168066
-      outSlope: 3.9705877
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.14285713
-    - serializedVersion: 3
-      time: 0.49583334
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -4.4999995
-      outSlope: -4.4999995
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.11570249
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4

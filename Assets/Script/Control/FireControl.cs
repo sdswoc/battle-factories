@@ -5,23 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class FireControl : MonoBehaviour 
 {
+    public string firePopUpText;
+    public AudioSource deathSoundSource;
+    public AudioSource bgMusic;
 	private void Awake()
 	{
 		GameFlow.fireControl = this;
-	}
-	private void Start()
-	{
-		//StartCoroutine(TempFire(false));
-		//FinishEvaluation(false);
 	}
 	public void Execute(bool myTurn)
 	{
 		StopAllCoroutines();
 		StartCoroutine(TempFire(myTurn));
+        GameFlow.uiTutorialText.Pop(firePopUpText);
 	}
 	IEnumerator TempFire(bool myTurn)
 	{
 		GameFlow.fireIndicator.StartFire();
+		Debug.Log(GameFlow.units.Count);
+        bool fired = false;
+        bgMusic.pitch = 1.25f;
 		for (int i = 0; i < GameFlow.units.Count; i++)
 		{
 			Debug.Log("Rename");
@@ -33,7 +35,6 @@ public class FireControl : MonoBehaviour
 				t.EndPath(t.position);
 			}
 		}
-		yield return new WaitForEndOfFrame();
 		for (int i = 0;i < GameFlow.units.Count;i++)
 		{
 			Troop t = null;
@@ -41,10 +42,22 @@ public class FireControl : MonoBehaviour
 			t?.GenerateAttackList();
 			if (t != null)
 			{
+            if (t.attackList.Count > 0)
+            {
+                    fired = true;
+            }
 				yield return StartCoroutine(t.Attack());
 			}
 		}
-		yield return new WaitForEndOfFrame();
+        bgMusic.pitch = 0.95f;
+        if (fired)
+        {
+            yield return new WaitForSeconds(1);
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+        }
 		EventHandle.FinishFire(myTurn);
 	}
 	public void EvaluateHP(Vector2Int[] hps,bool myTurn)
@@ -70,14 +83,25 @@ public class FireControl : MonoBehaviour
 	public IEnumerator FinishEvaluation(bool myTurn)
 	{
 		Debug.Log("Waiting");
-		yield return new WaitUntil(() => Projectile.list.Count <= 0);
-		for (int i = 0;i < GameFlow.units.Count;i++)
+		yield return new WaitUntil(() => GameFlow.projectiles.Count <= 0);
+        bool first = false;
+        for (int i = 0;i < GameFlow.units.Count;i++)
 		{
-			GameFlow.units[i].hp = GameFlow.units[i].finalHp;
+			GameFlow.units[i].hp = Mathf.Clamp(GameFlow.units[i].finalHp,0,GameFlow.units[i].maxHp);
+			GameFlow.units[i].finalHp = GameFlow.units[i].hp;
 			GameFlow.units[i].hpIndicator.UpdateMesh();
+			if (GameFlow.units[i] as Troop != null)
+				(GameFlow.units[i] as Troop).selectable = true;
 			if (GameFlow.units[i].hp <= 0)
 			{
-				GameFlow.units[i].Despawn();
+                if (!first)
+                {
+                    first = true;
+                    yield return new WaitForSeconds(1);
+                    deathSoundSource.Play();
+                }
+                GameFlow.units[i].Despawn();
+                
 				i--;
 			}
 		}

@@ -120,28 +120,6 @@ namespace Grid
 		private void OnDrawGizmos()
 		{
 			Gizmos.DrawWireCube((GetCameraMaximum() + GetCameraMinimum()) * 0.5f, (GetCameraMaximum() - GetCameraMinimum()));
-			for (int i = 0; i < width; i++)
-			{
-				for (int j = 0; j < height; j++)
-				{
-					if (data != null)
-					{
-						if (!data[i,j])
-						{
-							Gizmos.color = Color.cyan;
-						}
-						else
-						{
-							Gizmos.color = Color.red;
-						}
-					}
-					else
-					{
-						Gizmos.color = Color.cyan;
-					}
-					Gizmos.DrawCube(new Vector3(i, j), new Vector3(0.2f, 0.2f, 0));
-				}
-			}
 		}
 	}
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class FireIndicator : MonoBehaviour
 {
+    public AudioSource bgMusic;
 	public RectTransform fireIconTransform;
 	public float rotationSpeed;
 	public float popTime;
@@ -25,7 +26,7 @@ public class FireIndicator : MonoBehaviour
 	}
 	public void CloseFire()
 	{
-		if (opened)
+        if (opened)
 		{
 			opened = false;
 			if (gameObject.activeInHierarchy)

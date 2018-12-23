@@ -61,6 +61,7 @@ namespace Multiplayer
 		{
 			Debug.Log("NameSync");
 			GameFlow.enemyName = name;
+			Debug.Log(name);
 			SceneManager.LoadScene("SampleScene");
 		}
 

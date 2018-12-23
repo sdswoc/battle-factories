@@ -6,34 +6,58 @@ using HUD;
 
 public class Troop : Unit
 {
-	public float viewRadius;
+	public GameObject baseObject;
 	public float selectionRadius;
 	public float speed;
 	public int movementBlock;
 	public bool selectable;
 	public int damage;
 	public int fuelConsumption;
-	public float attackTime;
-	public RangeIndicator rangeIndicator;
+	public bool visible;
+
 
 	private List<PathNode> path = new List<PathNode>();
+	private new Transform transform;
 	public List<Unit> attackList = new List<Unit>();
-
-	public void Awake()
-	{
-		//Spawn(new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y)),type,unitID);
-	}
 
 	private void OnDestroy()
 	{
 		GameFlow.units.Remove(this);
 	}
+
+	private void Update()
+	{
+		mainPosition = transform.position;
+		if (type == UnitType.Enemy)
+		{
+			Vector2 positionF = transform.position;
+			visible = false;
+			for (int i = 0; i < GameFlow.units.Count; i++)
+			{
+				Unit u = GameFlow.units[i];
+				if (u.type == UnitType.Friendly)
+				{
+					if (((Vector2)u.mainPosition - positionF).sqrMagnitude <= u.viewRadius * u.viewRadius)
+					{
+						visible = true;
+						break;
+					}
+				}
+			}
+			if (baseObject.activeInHierarchy != visible)
+			{
+				baseObject.SetActive(visible);
+			}
+		}
+	}
+
 	public override void Spawn(Vector2Int position,UnitType type,int id)
 	{
 		base.Spawn(position, type, id);
 		selectable = true;
 		path = new List<PathNode>();
 		rangeIndicator.UpdateMaterial();
+		transform = GetComponent<Transform>();
 	}
 	
 	public override void Despawn()
@@ -99,7 +123,7 @@ public class Troop : Unit
 		selectable = true;
 	}
 
-	public IEnumerator Attack()
+	public  virtual IEnumerator Attack()
 	{
 		for (int i = 0; i < attackList.Count; i++)
 		{

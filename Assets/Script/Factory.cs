@@ -5,6 +5,7 @@ using Multiplayer;
 
 public class Factory : MonoBehaviour
 {
+	public GameObject container;
 	public GridRectangle rectangle;
 	public Vector2Int position;
 	public UnitType type;
@@ -12,7 +13,28 @@ public class Factory : MonoBehaviour
 	public bool established;
 	public CloudTrigger cloudTrigger;
 	private int idGeneratorIndex;
+	private bool visible = false;
 
+	private void Update()
+	{
+		if (!visible && established && type == UnitType.Enemy)
+		{
+			Vector2 positionF = position;
+			for (int i = 0; i < GameFlow.units.Count; i++)
+			{
+				Unit u = GameFlow.units[i];
+				if (u.type == UnitType.Friendly)
+				{
+					if (((Vector2)u.mainPosition - positionF).sqrMagnitude <= u.viewRadius * u.viewRadius)
+					{
+						visible = true;
+						break;
+					}
+				}
+			}
+			container.SetActive(visible);
+		}
+	}
 	public void MoveToPosition(Vector2Int position)
 	{
 		if (!established)
@@ -20,6 +42,7 @@ public class Factory : MonoBehaviour
 			this.position = position;
 			rectangle.position = position - new Vector2Int((int)(rectangle.size.x * 0.5f), (int)(rectangle.size.y * 0.5f));
 			rectangle.Setup();
+			GetComponent<Unit>().mainPosition = position;
 		}
 	}
 	public bool EvaluatePosition()
@@ -55,11 +78,17 @@ public class Factory : MonoBehaviour
 	public void Setup(Vector2Int position)
 	{
 		GetComponent<Unit>().Spawn(position, type, GetID());
-		Debug.Log("Setip");
+		Debug.Log("Setup");
 		MoveToPosition(position);
 		GameFlow.map.RegisterObstacle(rectangle);
 		established = true;
 		cloudTrigger.Show();
+		if (type == UnitType.Enemy)
+		{
+			container.SetActive(false);
+		}
+		GetComponent<Unit>().mainPosition = position;
+		StartCoroutine(WrenchSound());
 	}
 	public Vector2Int GetNearestEmptyLocation()
 	{
@@ -101,5 +130,11 @@ public class Factory : MonoBehaviour
 	{
 		idGeneratorIndex++;
 		return ((int)Socket.socketType | (idGeneratorIndex++ << 1));
+	}
+	IEnumerator WrenchSound()
+	{
+		GetComponent<AudioSource>().Play();
+		yield return new WaitForSeconds(4);
+		GetComponent<AudioSource>().Stop();
 	}
 }

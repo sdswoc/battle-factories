@@ -46,8 +46,8 @@ namespace Telepathy
             // exceptions are silent
             try
             {
-                // connect (blocking)
-                client.Connect(ip, port);
+				// connect (blocking)
+				client.Connect(ip, port);
                 _Connecting = false;
 
                 // run the receive loop

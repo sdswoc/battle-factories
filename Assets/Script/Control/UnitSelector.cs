@@ -6,6 +6,7 @@ namespace Control
 {
 	public class UnitSelector : MonoBehaviour, IControl
 	{
+        public string popUpText;
 		public int circleDetailMedium;
 		public int circleDetailBig;
 		public float stripWidth;
@@ -296,6 +297,7 @@ namespace Control
 			if (active)
 			{
 				gameObject.SetActive(true);
+                GameFlow.uiTutorialText.Pop(popUpText);
 			}
 			else
 			{

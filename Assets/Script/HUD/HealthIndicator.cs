@@ -31,7 +31,8 @@ public class HealthIndicator : MonoBehaviour
 
 	public void UpdateMesh()
 	{
-		int hp = unit.hp;
+		mesh = mesh ?? new Mesh();
+		int hp = Mathf.Clamp(unit.hp,0,unit.maxHp);
 		float percent = (float)hp / unit.maxHp;
 		List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();

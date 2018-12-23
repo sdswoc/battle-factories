@@ -19,6 +19,7 @@ public class MenuScript : MonoBehaviour
 	private bool beaconListDirty;
 	private void Awake()
 	{
+        Application.targetFrameRate = 60;
 		name = GameFlow.friendlyName = PlayerPrefs.GetString("name", "Unnamed Player");
 		nameInputField.text = name;
 		tempSwitch = false;

@@ -43,6 +43,7 @@ public class TankUnit : Troop
 			turret.eulerAngles = new Vector3(0, 0, turretRotation-90);
 			yield return new WaitForEndOfFrame();
 		}
+		GetComponent<AudioSource>().Play();
 		turret.eulerAngles = new Vector3(0, 0, angle-90);
 		Projectile p = SimplePool.Spawn(projectile, Vector3.zero, Quaternion.identity).GetComponent<Projectile>();
 		p.Launch(barrelTip.position, unit.position,unit);
@@ -94,8 +95,31 @@ public class TankUnit : Troop
 				}
 			}
 		}
+		SortList();
 	}
-
+	public void SortList()
+	{
+		if (attackList.Count > 0)
+		{
+			Unit u = attackList[0];
+			for (int i = 0; i < attackList.Count; i++)
+			{
+				if ((position - attackList[i].position).sqrMagnitude < (position - u.position).sqrMagnitude)
+				{
+					u = attackList[i];
+				}
+				else if ((position - attackList[i].position).sqrMagnitude == (position - u.position).sqrMagnitude)
+				{
+					if (attackList[i].hp < u.hp)
+					{
+						u = attackList[i];
+					}
+				}
+			}
+			attackList.Clear();
+			attackList.Add(u);
+		}
+	}
 	public IEnumerator Destroy()
 	{
 		Debug.Log("Destroy");

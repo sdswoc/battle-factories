@@ -7,6 +7,8 @@ namespace UI
 {
 	public class UIMoveMode : MonoBehaviour
 	{
+        public string popUpTextHurry;
+        public AudioSource tickSound;
 		public Text timerText;
 		private bool clicked;
 
@@ -22,8 +24,18 @@ namespace UI
 		IEnumerator Timer(float time)
 		{
 			int prevTime = -1;
+            int prevI = Mathf.FloorToInt(time - 5);
 			for (float i = 0; i < time; i += Time.deltaTime)
 			{
+                if (i > prevI)
+                {
+                    tickSound.Play();
+                    if (prevI == Mathf.FloorToInt(time - 5))
+                    {
+                        GameFlow.uiTutorialText.Pop(popUpTextHurry);
+                    }
+                    prevI = Mathf.CeilToInt(i);
+                }
 				int t = Mathf.RoundToInt(time - i);
 				if (t != prevTime)
 				{
@@ -35,7 +47,8 @@ namespace UI
 				}
 				yield return new WaitForEndOfFrame();
 			}
-			OnFinishButtonClick();
+            tickSound.Play();
+            OnFinishButtonClick();
 		}
 		public void OnSpawnButton(int i)
 		{
@@ -45,11 +58,17 @@ namespace UI
 		{
 			if (!clicked)
 			{
-				StopAllCoroutines();
-				EventHandle.FinishTurnLocal();
-				GameFlow.uiSpawnUnit.Close();
+				StartCoroutine(FinishTrigger());
 				clicked = true;
 			}
+		}
+		IEnumerator FinishTrigger()
+		{
+			yield return new WaitForSeconds(0.2f);
+			StopAllCoroutines();
+			EventHandle.FinishTurnLocal();
+			GameFlow.uiSpawnUnit.Close();
+			clicked = true;
 		}
 	}
 }

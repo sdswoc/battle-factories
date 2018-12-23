@@ -8,12 +8,13 @@ namespace UI
 {
 	public class UISetupMode : MonoBehaviour
 	{
+        public AudioSource tickSound;
 		public Text timerText;
 		public RectTransform buttonTransform;
 		public RectTransform timerTextTransform;
 		public RectTransform tickImageTransform;
 		public AnimationCurve transitionCurve;
-
+        public string popMessageHurry;
 		private bool clicked = false;
 		private void Awake()
 		{
@@ -31,28 +32,36 @@ namespace UI
 		}
 		public void SetDeadLine()
 		{
+            GameFlow.uiTutorialText.Pop(popMessageHurry);
 			StopAllCoroutines();
 			StartCoroutine(ButtonTransition());
 			StartCoroutine(Timer(GameFlow.FACTORY_SETUP_TIMELIMIT));
 		}
-		IEnumerator Timer(float time)
-		{
-			int prevTimerValue = -1;
-			for (float i = time; i >= 0;i -= Time.deltaTime)
-			{
-				int tt = Mathf.RoundToInt(i);
-				if (tt != prevTimerValue)
-				{
-					prevTimerValue = tt;
-					int ones = tt % 10;
-					tt /= 10;
-					int tens = tt;
-					timerText.text = tens.ToString() + ones.ToString();
-				}
-				yield return new WaitForEndOfFrame();
-			}
-			OnOKButton();
-		}
+        IEnumerator Timer(float time)
+        {
+            int prevTimerValue = -1;
+            int prevI = Mathf.CeilToInt(5);
+            for (float i = time; i >= 0; i -= Time.deltaTime)
+            {
+                if (i < prevI)
+                {
+                    prevI = Mathf.FloorToInt(i);
+                    tickSound.Play();
+                }
+                int tt = Mathf.RoundToInt(i);
+                if (tt != prevTimerValue)
+                {
+                    prevTimerValue = tt;
+                    int ones = tt % 10;
+                    tt /= 10;
+                    int tens = tt;
+                    timerText.text = tens.ToString() + ones.ToString();
+                }
+                yield return new WaitForEndOfFrame();
+            }
+            tickSound.Play();
+            OnOKButton();
+        }
 		IEnumerator ButtonTransition()
 		{
 			for (float i = 0;i < 1;i += Time.deltaTime)

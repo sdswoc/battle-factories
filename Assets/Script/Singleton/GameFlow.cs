@@ -36,11 +36,13 @@ public class GameFlow
 	public static UISpawnModule uiSpawnUnit;
 	public static UIResourceCounter uIResourceCounter;
 	public static List<Unit> units = new List<Unit>();
+	public static List<Projectile> projectiles = new List<Projectile>();
 	public static Timer timer;
 	public static FireIndicator fireIndicator;
 	public static UIFinishPanel finishPanel;
 	public static UIDisconnectPanel disconnectPanel;
 	public static UICurtain uiCurtain;
+    public static UITutorialText uiTutorialText;
 	public static int money;
 	public static int fuel;
 	public static int moneyRate = 5;

@@ -86,6 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4957410008678228}
   - component: {fileID: 114839301866081282}
+  - component: {fileID: 82627767183783558}
   m_Layer: 0
   m_Name: TankUnit
   m_TagString: Untagged
@@ -479,6 +480,101 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1692452199956428}
   m_Mesh: {fileID: 4300004, guid: ff64cd068a2f597418858e35e5cbed15, type: 3}
+--- !u!82 &82627767183783558
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1656885424397822}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: baecfa016e260254d9b63417984705bc, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 1
+  BypassListenerEffects: 1
+  BypassReverbZones: 1
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &114108755920429544
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -524,28 +620,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5e2302f18eda84c8b6280deba99058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewRadius: 16
   unitID: 0
   type: 0
   hp: 20
   maxHp: 20
   finalHp: 0
   position: {x: 0, y: 0}
+  mainPosition: {x: 0, y: 0}
   hpIndicator: {fileID: 114108755920429544}
-  viewRadius: 16
+  rangeIndicator: {fileID: 114317793522171760}
+  baseObject: {fileID: 1185008145032542}
   selectionRadius: 1
   speed: 6
   movementBlock: 16
   selectable: 1
   damage: -5
   fuelConsumption: 3
-  attackTime: 0.5
-  rangeIndicator: {fileID: 114317793522171760}
+  visible: 0
+  attackList: []
   turret: {fileID: 4066783730222558}
   body: {fileID: 4526157059528044}
   barrel: {fileID: 4632085836890700}
   barrelTip: {fileID: 4715382134309948}
-  aimTime: 0.3
-  fireTime: 0.2
+  aimTime: 0.7
+  fireTime: 0.3
   turretRecoil: 0.3
   fallDepth: 1
   fallSpeed: 2.5

@@ -187,7 +187,7 @@ public class EventHandle : MonoBehaviour
 		SceneManager.LoadScene("TempMainMenu");
 		Socket.Reset();
 		GridRectangle.list.Clear();
-		Projectile.list.Clear();
+		GameFlow.projectiles.Clear();
 		pathNodes.Clear();
 		GameFlow.units.Clear();
 	}

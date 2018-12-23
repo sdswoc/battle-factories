@@ -9,8 +9,21 @@ public class MenuPanelSwitcher : MonoBehaviour
 	public RectTransform[] panels;
 
 	public float switchTime;
+    public bool startTrigger;
 
-	public void Switch(int i)
+    public void Start()
+    {
+        startTrigger = false;
+    }
+    private void Update()
+    {
+        if (!startTrigger && Input.GetMouseButtonDown(0))
+        {
+            startTrigger = true;
+            StartCoroutine(SwitchCoroutine(0));
+        }
+    }
+    public void Switch(int i)
 	{
 		StartCoroutine(SwitchCoroutine(i));
 	}
@@ -32,10 +45,11 @@ public class MenuPanelSwitcher : MonoBehaviour
 			}
 			currentTransform.gameObject.SetActive(false);
 		}
-		if (currentTransform != null)
+        currentTransform = panels[t % panels.Length];
+        currentTransform.gameObject.SetActive(true);
+        if (currentTransform != null)
 		{
-			currentTransform = panels[t % panels.Length];
-			currentTransform.gameObject.SetActive(true);
+
 			for (float i = 0; i < switchTime; i += Time.deltaTime)
 			{
 				currentTransform.localScale = Vector3.one * (curve.Evaluate(i / switchTime));

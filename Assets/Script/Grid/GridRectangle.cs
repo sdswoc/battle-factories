@@ -6,13 +6,26 @@ public class GridRectangle : MonoBehaviour
 {
 	public Vector2Int position;
 	public Vector2Int size;
-	public bool register;
-
+	public bool autoRegister;
+	public bool registerShootObstacle;
+	public bool adjustTransform;
 	public static List<GridRectangle> list = new List<GridRectangle>();
 
 	private void Awake()
 	{
-		list.Add(this);
+		if (registerShootObstacle)
+		{
+			list.Add(this);
+		}
+		if (adjustTransform)
+		{
+			transform.position =  (Vector2)position; ;
+		}
+		else
+		{
+			position = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+			transform.position = (Vector2)position;
+		}
 	}
 	private void OnDestroy()
 	{
@@ -20,7 +33,7 @@ public class GridRectangle : MonoBehaviour
 	}
 	private void Start()
 	{
-		if (register)
+		if (autoRegister)
 		{
 			GameFlow.map.RegisterObstacle(this);
 		}
@@ -86,9 +99,14 @@ public class GridRectangle : MonoBehaviour
 	}
 	private void OnDrawGizmos()
 	{
-		if (!Application.isPlaying)
+		if (adjustTransform)
 		{
-			Setup();
+			transform.position = (Vector2)position; ;
+		}
+		else
+		{
+			position = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+			transform.position = (Vector2)position;
 		}
 		Gizmos.color = Color.white;
 		Gizmos.DrawWireCube((Vector3)((Vector2)position + (Vector2)size * 0.5f)-Vector3.one*0.5f, new Vector3(size.x, size.y));

@@ -16,6 +16,7 @@ public class SetupFactory : MonoBehaviour, IControl
 	public Color badColor;
 	public Vector2Int serverFactoryPosition;
 	public Vector2Int clientFactoryPosition;
+    public string popMessageStart;
 
 	private bool good;
 	private bool invokeReleaseEvent = false;
@@ -25,34 +26,35 @@ public class SetupFactory : MonoBehaviour, IControl
 	private new Transform transform;
 	private bool active;
 
-	private void Awake()
+    private void Awake()
+    {
+        transform = GetComponent<Transform>();
+        GameFlow.setupFactory = this;
+        GameFlow.friendlyFactory = factory = Instantiate(factoryObject).GetComponent<Factory>();
+        factory.type = UnitType.Friendly;
+        GameFlow.enemyFactory = Instantiate(factoryObject).GetComponent<Factory>();
+        GameFlow.enemyFactory.type = UnitType.Enemy;
+        GameFlow.enemyFactory.gameObject.SetActive(false);
+        mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+        GenerateCircleMesh(mesh, circleRadius, circleRadius + stripWidth, detail);
+        GUIUpdate();
+        if (Socket.socketType == SocketType.Server)
+        {
+            factory.MoveToPosition(serverFactoryPosition);
+            prevPosition = serverFactoryPosition;
+        }
+        else
+        {
+            factory.MoveToPosition(clientFactoryPosition);
+            prevPosition = clientFactoryPosition;
+        }
+        GetComponent<MeshRenderer>().enabled = (false);
+    }
+	private void Start()
 	{
-		transform = GetComponent<Transform>();
-		GameFlow.setupFactory = this;
-		GameFlow.friendlyFactory = factory = Instantiate(factoryObject).GetComponent<Factory>();
-		factory.type = UnitType.Friendly;
-		GameFlow.enemyFactory = Instantiate(factoryObject).GetComponent<Factory>();
-		GameFlow.enemyFactory.type = UnitType.Enemy;
-		GameFlow.enemyFactory.gameObject.SetActive(false);
-		mesh = new Mesh();
-		GetComponent<MeshFilter>().mesh = mesh;
-		GenerateCircleMesh(mesh, circleRadius, circleRadius + stripWidth, detail);
-		GUIUpdate();
-		if (Socket.socketType == SocketType.Server)
-		{
-			factory.MoveToPosition(serverFactoryPosition);
-			prevPosition = serverFactoryPosition;
-		}
-		else
-		{
-			factory.MoveToPosition(clientFactoryPosition);
-			prevPosition = clientFactoryPosition;
-		}
-		GetComponent<MeshRenderer>().enabled = (false);
-	}
-	void Start()
-	{
-		GameFlow.cameraControl.Focus(GameFlow.friendlyFactory.position);
+		GameFlow.cameraControl.Focus(factory.position);
+        GameFlow.uiTutorialText.Pop(popMessageStart);
 	}
 	public void KeyCanceled()
 	{
