@@ -43,6 +43,7 @@ public class UITutorialText : MonoBehaviour
             t.localScale = Vector3.one * popUpCurve.Evaluate(1 - (i / popUpTime));
             yield return new WaitForEndOfFrame();
         }
+        gameObject.SetActive(false);
         displaying = false;
     }
 }

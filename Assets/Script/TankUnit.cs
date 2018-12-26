@@ -21,7 +21,22 @@ public class TankUnit : Troop
 	private float turretRotationVelocity;
 	private float bodyRotationVelocity;
 
-	public override void FollowPath(Vector2Int start, Vector2Int stop, float t)
+    public override void Spawn(Vector2Int position, UnitType type, int id)
+    {
+        base.Spawn(position, type, id);
+        OverwriteValues();
+        rangeIndicator.UpdateMesh();
+    }
+    public void OverwriteValues()
+    {
+        this.viewRadius = ValueLoader.tankRange == 0 ? this.viewRadius : ValueLoader.tankRange;
+        this.movementBlock = ValueLoader.tankMobility == 0 ? this.movementBlock : ValueLoader.tankMobility;
+        this.damage = ValueLoader.tankDamage == 0 ? this.damage : ValueLoader.tankDamage;
+        this.hp = ValueLoader.tankHealth == 0 ? this.hp : ValueLoader.tankHealth;
+        this.maxHp = this.finalHp = this.finalHp = ValueLoader.tankHealth == 0 ? this.maxHp : ValueLoader.tankHealth;
+        this.fuelConsumption = ValueLoader.tankFuelUse == 0 ? this.fuelConsumption : ValueLoader.tankFuelUse;
+    }
+    public override void FollowPath(Vector2Int start, Vector2Int stop, float t)
 	{
 		base.FollowPath(start, stop, t);
 		float angle = Mathf.Atan2(stop.y - start.y, stop.x - start.x)*Mathf.Rad2Deg;
@@ -31,7 +46,6 @@ public class TankUnit : Troop
 		turret.eulerAngles = new Vector3(0, 0, turretRotation-90);
 		body.eulerAngles = new Vector3(0, 0, bodyRotation-90);
 	}
-
 	public override IEnumerator AnimateAttack(Unit unit)
 	{
 		base.AnimateAttack(unit);

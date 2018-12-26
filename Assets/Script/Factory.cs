@@ -14,8 +14,12 @@ public class Factory : MonoBehaviour
 	public CloudTrigger cloudTrigger;
 	private int idGeneratorIndex;
 	private bool visible = false;
-
-	private void Update()
+    private void Start()
+    {
+        OverwriteValues();
+        GetComponent<Unit>().rangeIndicator.UpdateMesh();
+    }
+    private void Update()
 	{
 		if (!visible && established && type == UnitType.Enemy)
 		{
@@ -78,8 +82,10 @@ public class Factory : MonoBehaviour
 	public void Setup(Vector2Int position)
 	{
 		GetComponent<Unit>().Spawn(position, type, GetID());
-		Debug.Log("Setup");
-		MoveToPosition(position);
+        OverwriteValues();
+        GetComponent<Unit>().rangeIndicator.UpdateMesh();
+
+        MoveToPosition(position);
 		GameFlow.map.RegisterObstacle(rectangle);
 		established = true;
 		cloudTrigger.Show();
@@ -90,6 +96,12 @@ public class Factory : MonoBehaviour
 		GetComponent<Unit>().mainPosition = position;
 		StartCoroutine(WrenchSound());
 	}
+    public void OverwriteValues()
+    {
+        Unit u = GetComponent<Unit>();
+        u.viewRadius = ValueLoader.factoryRange == 0 ? u.viewRadius : ValueLoader.factoryRange;
+        u.maxHp = u.finalHp = u.hp = ValueLoader.factoryHealth == 0 ? u.maxHp : ValueLoader.factoryHealth;
+    }
 	public Vector2Int GetNearestEmptyLocation()
 	{
 		float distance = float.MaxValue;

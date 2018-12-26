@@ -11,8 +11,22 @@ public class Medic : Troop
 
 	private float bodyRotation;
 	private float bodyRotationVelocity;
-
-	public override void FollowPath(Vector2Int start, Vector2Int stop, float t)
+    public override void Spawn(Vector2Int position, UnitType type, int id)
+    {
+        base.Spawn(position, type, id);
+        OverwriteValues();
+    }
+    public void OverwriteValues()
+    {
+        this.viewRadius = ValueLoader.medicRange == 0 ? this.viewRadius : ValueLoader.medicRange;
+        this.movementBlock = ValueLoader.medicMobility == 0 ? this.movementBlock : ValueLoader.medicMobility;
+        this.damage = ValueLoader.medicDamage == 0 ? this.damage : ValueLoader.medicDamage;
+        this.hp = ValueLoader.medicHealth == 0 ? this.hp : ValueLoader.medicHealth;
+        this.maxHp = this.finalHp = this.finalHp = ValueLoader.medicHealth == 0 ? this.maxHp : ValueLoader.medicHealth;
+        this.fuelConsumption = ValueLoader.medicFuelUse == 0 ? this.fuelConsumption : ValueLoader.medicFuelUse;
+        rangeIndicator.UpdateMesh();
+    }
+    public override void FollowPath(Vector2Int start, Vector2Int stop, float t)
 	{
 		base.FollowPath(start, stop, t);
 		float angle = Mathf.Atan2(stop.y - start.y, stop.x - start.x) * Mathf.Rad2Deg; bodyRotation = Mathf.SmoothDampAngle(bodyRotation, angle, ref bodyRotationVelocity, 0.06f);

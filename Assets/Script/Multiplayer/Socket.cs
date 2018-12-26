@@ -127,7 +127,6 @@ namespace Multiplayer
 			List<BeaconLocation> list = new List<BeaconLocation>();
 			foreach (BeaconLocation beacon in beacons)
 			{
-				Debug.Log("Beacon found " + beacon.Address);
 				list.Add(beacon);
 				/*
 				StartClient(beacon.Address.Address.ToString(), beacon.Address.Port);
@@ -137,7 +136,6 @@ StopProbe();*/
 			{
 				beaconLocations = list;
 				OnBeaconListUpdated?.Invoke();
-				Debug.Log("unequal");
 				return;
 			}
 			for (int i = 0;i < list.Count;i++)

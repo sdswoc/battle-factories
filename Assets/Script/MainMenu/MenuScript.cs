@@ -67,7 +67,6 @@ public class MenuScript : MonoBehaviour
 	public void OnBeaconListUpdate()
 	{
 		beaconListDirty = true;
-		Debug.Log("Dirty");
 	}
 	public void UpdateBeaconList()
 	{

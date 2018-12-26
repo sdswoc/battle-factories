@@ -10,7 +10,6 @@ namespace Multiplayer
 		// Code = 1
 		public static void FactoryLocation(int x,int y)
 		{
-			Debug.Log("FactoryLocation");
 			EventHandle.SetEnemyFactory(new Vector2Int(x, y));
 		}
 
@@ -59,7 +58,6 @@ namespace Multiplayer
 		// Code = 7
 		public static void NameSync(string name)
 		{
-			Debug.Log("NameSync");
 			GameFlow.enemyName = name;
 			Debug.Log(name);
 			SceneManager.LoadScene("SampleScene");

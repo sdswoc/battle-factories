@@ -13,8 +13,22 @@ public class TruckUnit : Troop
 
 	private float bodyRotation;
 	private float bodyRotationVelocity;
-
-	public override void FollowPath(Vector2Int start, Vector2Int stop, float t)
+    public override void Spawn(Vector2Int position, UnitType type, int id)
+    {
+        base.Spawn(position, type, id);
+        OverwriteValues();
+        rangeIndicator.UpdateMesh();
+    }
+    public void OverwriteValues()
+    {
+        this.viewRadius = ValueLoader.truckRange == 0 ? this.viewRadius : ValueLoader.truckRange;
+        this.movementBlock = ValueLoader.truckMobility == 0 ? this.movementBlock : ValueLoader.truckMobility;
+        this.damage = ValueLoader.truckDamage == 0 ? this.damage : ValueLoader.truckDamage;
+        this.hp = ValueLoader.truckHealth == 0 ? this.hp : ValueLoader.truckHealth;
+        this.maxHp = this.finalHp = this.finalHp = ValueLoader.truckHealth == 0 ? this.maxHp : ValueLoader.truckHealth;
+        this.fuelConsumption = ValueLoader.truckFuelUse == 0 ? this.fuelConsumption : ValueLoader.truckFuelUse;
+    }
+    public override void FollowPath(Vector2Int start, Vector2Int stop, float t)
 	{
 		base.FollowPath(start, stop, t);
 		float angle = Mathf.Atan2(stop.y - start.y, stop.x - start.x) * Mathf.Rad2Deg;		bodyRotation = Mathf.SmoothDampAngle(bodyRotation, angle, ref bodyRotationVelocity, 0.06f);

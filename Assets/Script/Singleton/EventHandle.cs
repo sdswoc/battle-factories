@@ -167,19 +167,21 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void Initialization()
 	{
-		GameFlow.money = 0;
-		GameFlow.fuel = 0;
-		GameFlow.moneyRate = 3;
-		GameFlow.fuelLimit = 5;
+		GameFlow.money = ValueLoader.startCoin;
+		GameFlow.fuel = ValueLoader.startFuel;
+		GameFlow.moneyRate = ValueLoader.startCoinRate;
+		GameFlow.fuelLimit = ValueLoader.startFuelLimit;
+        GameFlow.FACTORY_SETUP_TIMELIMIT = ValueLoader.factorySetupTime == 0 ? 10 : ValueLoader.factorySetupTime;
+        GameFlow.TURN_TIME_LIMIT = ValueLoader.turnTime == 0 ? 30:ValueLoader.turnTime;
 	}
 	public static void MoneyUpgrade()
 	{
-		GameFlow.moneyRate += 5;
+		GameFlow.moneyRate += ValueLoader.upgradeCoinRate;
 		GameFlow.uIResourceCounter.StateUpdate();
 	}
 	public static void FuelUpgrade()
 	{
-		GameFlow.fuelLimit += 5;
+		GameFlow.fuelLimit += ValueLoader.upgradeFuelLimit;
 		GameFlow.uIResourceCounter.StateUpdate();
 	}
 	public static void GoToMainMenu()

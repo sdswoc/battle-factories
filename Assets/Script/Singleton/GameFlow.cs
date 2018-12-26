@@ -45,13 +45,13 @@ public class GameFlow
     public static UITutorialText uiTutorialText;
 	public static int money;
 	public static int fuel;
-	public static int moneyRate = 5;
+	public static int moneyRate = 100;
 	public static int fuelLimit = 5;
 	public static string friendlyName = "Unnamed Player";
 	public static string enemyName = "Unnamed Player";
 
-	public const float FACTORY_SETUP_TIMELIMIT = 10;
-	public const float TURN_TIME_LIMIT = 20;
+	public static float FACTORY_SETUP_TIMELIMIT = 10;
+	public static float TURN_TIME_LIMIT = 20;
 
 
 	public static void SetMode(UIMode mode)

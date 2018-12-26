@@ -21,12 +21,10 @@ public class FireControl : MonoBehaviour
 	IEnumerator TempFire(bool myTurn)
 	{
 		GameFlow.fireIndicator.StartFire();
-		Debug.Log(GameFlow.units.Count);
         bool fired = false;
         bgMusic.pitch = 1.25f;
 		for (int i = 0; i < GameFlow.units.Count; i++)
 		{
-			Debug.Log("Rename");
 			Troop t = null;
 			t = GameFlow.units[i] as Troop;
 			if (t != null)
