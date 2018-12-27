@@ -15,8 +15,10 @@ public class TankUnit : Troop
 	public float fallSpeed;
 	public AnimationCurve recoilCurve;
 	public GameObject projectile;
+    public ParticleSystem system;
+    public int emitCount;
 
-	private float turretRotation;
+    private float turretRotation;
 	private float bodyRotation;
 	private float turretRotationVelocity;
 	private float bodyRotationVelocity;
@@ -62,7 +64,9 @@ public class TankUnit : Troop
 		Projectile p = SimplePool.Spawn(projectile, Vector3.zero, Quaternion.identity).GetComponent<Projectile>();
 		p.Launch(barrelTip.position, unit.position,unit);
 		p.damage = damage;
-		for (float i = 0; i < fireTime; i += Time.deltaTime)
+        barrel.localPosition = new Vector3(barrel.localPosition.x, -recoilCurve.Evaluate(0 / fireTime) * turretRecoil, barrel.localPosition.z);
+        system.Emit(emitCount);
+        for (float i = 0; i < fireTime; i += Time.deltaTime)
 		{
 			barrel.localPosition = new Vector3(barrel.localPosition.x, -recoilCurve.Evaluate(i / fireTime)*turretRecoil, barrel.localPosition.z);
 			yield return new WaitForEndOfFrame();
@@ -139,7 +143,7 @@ public class TankUnit : Troop
 		Debug.Log("Destroy");
 		Transform transform = GetComponent<Transform>();
 		Vector3 pos = transform.position;
-		for (float i = 0;i < fallDepth;i+= Time.deltaTime*fallSpeed)
+        for (float i = 0;i < fallDepth;i+= Time.deltaTime*fallSpeed)
 		{
 			transform.position = pos + Vector3.forward * i;
 			yield return new WaitForEndOfFrame();

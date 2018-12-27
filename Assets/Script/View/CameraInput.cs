@@ -43,14 +43,17 @@ namespace View
 
 		private void Update()
 		{
-			if (touchControl)
-			{
-				TouchUpdate();
-			}
-			else
-			{
-				MouseUpdate();
-			}
+            if (active)
+            {
+                if (touchControl)
+                {
+                    TouchUpdate();
+                }
+                else
+                {
+                    MouseUpdate();
+                }
+            }
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
 				GameFlow.SetMode((UIMode)(((int)GameFlow.uiMode+1)%2));

@@ -1,16 +1,36 @@
 fileFormatVersion: 2
-guid: 368e5516e21f82c468c1a923c5448536
+guid: f6e8004e3651ead44b971eb2214d9c03
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Menu_Model
+    100002: Flag_Green
+    100004: Flag_pole
+    100006: Flag_Red
+    100008: Flag_White
     400000: //RootNode
-    400002: Menu_Model
-    2100000: Menu_ModelMat
-    2300000: Menu_Model
-    3300000: Menu_Model
-    4300000: Menu_Model
+    400002: Flag_Green
+    400004: Flag_pole
+    400006: Flag_Red
+    400008: Flag_White
+    2100000: palette_003__Flag_Green_png
+    2100002: palette_002__Flag_White_png
+    2100004: palette_001__Flag_Red_png
+    2100006: palette__Flag_pole_png
+    2300000: Flag_Green
+    2300002: Flag_pole
+    2300004: Flag_Red
+    2300006: Flag_White
+    3300000: Flag_Green
+    3300002: Flag_pole
+    3300004: Flag_Red
+    3300006: Flag_White
+    4300000: Flag_Green
+    4300002: Flag_White
+    4300004: Flag_Red
+    4300006: Flag_pole
+    7400000: Default Take
+    9500000: //RootNode
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -42,11 +62,11 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.033333335
+    globalScale: 0.03333333
     meshCompression: 0
     addColliders: 0
     importVisibility: 0
-    importBlendShapes: 0
+    importBlendShapes: 1
     importCameras: 0
     importLights: 0
     swapUVChannels: 0
@@ -63,7 +83,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
     previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -84,7 +104,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0

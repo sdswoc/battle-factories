@@ -44,12 +44,12 @@ public class UICurtain : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 		for (float i = 0; i < transitionTime; i += Time.deltaTime)
 		{
-			transform.anchorMax = Vector2.right + Vector2.up * (1+ curve.Evaluate(i / transitionTime));
-			transform.anchorMin = Vector2.up * (curve.Evaluate(i / transitionTime));
+			transform.anchorMax = Vector2.right + Vector2.up * (1- curve.Evaluate(i / transitionTime));
+			transform.anchorMin = Vector2.up * (-curve.Evaluate(i / transitionTime));
 			yield return new WaitForEndOfFrame();
 		}
-		transform.anchorMax = Vector2.right + Vector2.up*2;
-		transform.anchorMin = Vector2.up * (1);
+		transform.anchorMax = Vector2.right ;
+		transform.anchorMin = Vector2.up * (-1);
 		gameObject.SetActive(false);
 	}
 }

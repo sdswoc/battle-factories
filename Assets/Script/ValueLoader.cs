@@ -43,6 +43,10 @@ public class ValueLoader : MonoBehaviour
     public static int factorySetupTime;
     public static int turnTime;
 
+    public static int flagRange;
+    public static int flagCaptureTurnLimit;
+    public static int flagBoundaryRange;
+
     private void Awake()
     {
         if (Directory.Exists(Application.persistentDataPath) && File.Exists(Application.persistentDataPath + "/values.txt"))
@@ -90,6 +94,10 @@ public class ValueLoader : MonoBehaviour
             factorySetupTime = ini["time"]["factorysetuptime"].ToInt(0);
             turnTime = ini["time"]["turnTime"].ToInt(0);
 
+            flagRange = ini["flag"]["range"].ToInt(0);
+            flagCaptureTurnLimit = ini["flag"]["captureLimit"].ToInt(0);
+            flagBoundaryRange = ini["flag"]["boundary"].ToInt(0);
+
             Debug.Log("Loaded");
         }
         else
@@ -135,6 +143,10 @@ public class ValueLoader : MonoBehaviour
 
             ini["time"]["factorysetuptime"] = factorySetupTime;
             ini["time"]["turnTime"] = factorySetupTime;
+
+            ini["flag"]["range"] = flagRange;
+            ini["flag"]["captureLimit"] = flagCaptureTurnLimit;
+            ini["flag"]["boundary"] = flagBoundaryRange;
 
             ini.Save(Application.persistentDataPath + "/values.txt");
             Debug.Log("Saved");

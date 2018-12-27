@@ -54,6 +54,6 @@ public class Projectile : MonoBehaviour
 		GameFlow.projectiles.Remove(this);
 		unit.hpIndicator.UpdateMesh();
 		SimplePool.Despawn(gameObject);
-		SimplePool.Spawn(explosion, Vector3.zero, Quaternion.identity).GetComponent<Explosion>().Trigger();
+		SimplePool.Spawn(explosion, to, Quaternion.identity).GetComponent<Explosion>().Trigger();
 	}
 }

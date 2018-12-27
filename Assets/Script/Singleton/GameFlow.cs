@@ -43,10 +43,13 @@ public class GameFlow
 	public static UIDisconnectPanel disconnectPanel;
 	public static UICurtain uiCurtain;
     public static UITutorialText uiTutorialText;
+    public static Flag flag;
+    public static MenuScript menuScript;
 	public static int money;
 	public static int fuel;
 	public static int moneyRate = 100;
 	public static int fuelLimit = 5;
+    public static int flagCapture = 1;
 	public static string friendlyName = "Unnamed Player";
 	public static string enemyName = "Unnamed Player";
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Multiplayer;
 using System;
+using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour 
 {
@@ -19,6 +20,7 @@ public class MenuScript : MonoBehaviour
 	private bool beaconListDirty;
 	private void Awake()
 	{
+        GameFlow.menuScript = this;
         Application.targetFrameRate = 60;
 		name = GameFlow.friendlyName = PlayerPrefs.GetString("name", "Unnamed Player");
 		nameInputField.text = name;
@@ -159,8 +161,13 @@ public class MenuScript : MonoBehaviour
 			UpdateBeaconList();
 		}
 	}
-	private void OnConnected()
+	public void OnConnected()
 	{
-		
+        StartCoroutine(SwitchScene());
 	}
+    private IEnumerator SwitchScene()
+    {
+        yield return StartCoroutine(GameFlow.uiCurtain.Close());
+        SceneManager.LoadScene("SampleScene");
+    }
 }

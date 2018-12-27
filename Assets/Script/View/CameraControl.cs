@@ -122,13 +122,28 @@ namespace View
 			camera.orthographicSize = Mathf.Clamp(camera.orthographicSize * (1 - size / ((cameraResolution.x + cameraResolution.y) * 0.5f)), minZoomFactor, maxZoomFactor);
 		}
 
-		public void Focus(Vector2 focus)
-		{
-			Vector2 current = TransformCameraToWorld(new Vector2(cameraResolution.x, cameraResolution.y) * 0.5f);
-			camera.GetComponent<Transform>().Translate(focus - current);
-		}
-		
-		private void OnDrawGizmos()
+
+		public IEnumerator Focus(Vector2 focus,float timeFrame)
+        {
+            Vector2 current = TransformCameraToWorld(cameraResolution * 0.5f);
+            Vector2 cameraVelocity = Vector2.zero;
+            Vector3 delta2dTo3d = camera.GetComponent<Transform>().position - (Vector3)current;
+            while ((focus - current).sqrMagnitude > 0.5f)
+            {
+                UpdateControlPoints();
+                current = Vector2.SmoothDamp(current, focus, ref cameraVelocity, timeFrame);
+                camera.GetComponent<Transform>().position = (Vector3)current+delta2dTo3d;
+                current = TransformCameraToWorld(new Vector2(cameraResolution.x, cameraResolution.y) * 0.5f);
+                UpdateControlPoints();
+                if (AdjustPosition())
+                {
+                    break;
+                }
+                yield return new WaitForEndOfFrame();
+            }
+            yield return null;
+        }
+        private void OnDrawGizmos()
 		{
 			Gizmos.color = Color.green;
 			for (int i = 0; i < controlPoints.Length; i++)

@@ -1210,12 +1210,40 @@ MonoBehaviour:
   rectangle: {fileID: 114844579061810938}
   position: {x: 0, y: 16}
   type: 0
+  flagPosition: {x: 49, y: 68}
   unitObjects:
   - {fileID: 1656885424397822, guid: c649d5d269e6ae14e962c96a3e806db7, type: 2}
   - {fileID: 1128290150008398, guid: ea584d1fd6fe7cf42801c82949d2e6b4, type: 2}
   - {fileID: 1357022433249540, guid: c69b139969063cf48a63385f35fc1676, type: 2}
   established: 0
   cloudTrigger: {fileID: 114743647954695248}
+  fallHeight: 3
+  fallTime: 1
+  rangeIndicatorCloseTime: 0.2
+  rangeIndicatorCloseAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.11178848
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.4710855
+      outSlope: -1.4710855
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.043699563
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &114891465363246746
 MonoBehaviour:
   m_ObjectHideFlags: 1

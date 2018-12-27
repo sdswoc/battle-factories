@@ -7,10 +7,13 @@ public class Missile : Projectile
 	public float heightGain;
 	public AnimationCurve heightCurve;
 	public float verticalTime;
+    public TrailRenderer trail;
 
 	protected override IEnumerator Animate(Vector2 from, Vector2 to, Unit unit)
 	{
 		Vector3 pos = from;
+        transform.position = pos;
+        trail.emitting = true;
 		transform.eulerAngles = new Vector3(180, 0, 0);
 		for (float i = 0; i < verticalTime; i += Time.deltaTime)
 		{
@@ -34,7 +37,8 @@ public class Missile : Projectile
 		GameFlow.billboardManager.Spawn(damage, to);
 		GameFlow.projectiles.Remove(this);
 		unit.hpIndicator.UpdateMesh();
+        trail.emitting = false;
 		SimplePool.Despawn(gameObject);
-		SimplePool.Spawn(explosion, Vector3.zero, Quaternion.identity).GetComponent<Explosion>().Trigger();
+		SimplePool.Spawn(explosion,to, Quaternion.identity).GetComponent<Explosion>().Trigger();
 	}
 }

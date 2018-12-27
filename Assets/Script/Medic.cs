@@ -9,7 +9,7 @@ public class Medic : Troop
 	public float fallDepth;
 	public float fallSpeed;
 
-	private float bodyRotation;
+    private float bodyRotation;
 	private float bodyRotationVelocity;
     public override void Spawn(Vector2Int position, UnitType type, int id)
     {
@@ -93,7 +93,7 @@ public class Medic : Troop
 		Debug.Log("Destroy");
 		Transform transform = GetComponent<Transform>();
 		Vector3 pos = transform.position;
-		for (float i = 0; i < fallDepth; i += Time.deltaTime * fallSpeed)
+        for (float i = 0; i < fallDepth; i += Time.deltaTime * fallSpeed)
 		{
 			transform.position = pos + Vector3.forward * i;
 			yield return new WaitForEndOfFrame();

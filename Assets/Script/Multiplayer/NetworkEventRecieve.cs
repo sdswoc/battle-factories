@@ -60,7 +60,7 @@ namespace Multiplayer
 		{
 			GameFlow.enemyName = name;
 			Debug.Log(name);
-			SceneManager.LoadScene("SampleScene");
+            GameFlow.menuScript.OnConnected();
 		}
 
 		public static void RecieveEvent(Packet p)

@@ -167,6 +167,8 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void Initialization()
 	{
+        Debug.Log("Dew it");
+        GameFlow.flagCapture = 0;
 		GameFlow.money = ValueLoader.startCoin;
 		GameFlow.fuel = ValueLoader.startFuel;
 		GameFlow.moneyRate = ValueLoader.startCoinRate;
@@ -193,4 +195,8 @@ public class EventHandle : MonoBehaviour
 		pathNodes.Clear();
 		GameFlow.units.Clear();
 	}
+    public static void SwitchToGameScene()
+    {
+        
+    }
 }

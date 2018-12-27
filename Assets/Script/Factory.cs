@@ -9,11 +9,18 @@ public class Factory : MonoBehaviour
 	public GridRectangle rectangle;
 	public Vector2Int position;
 	public UnitType type;
+    public Vector2Int flagPosition;
 	public GameObject[] unitObjects;
 	public bool established;
 	public CloudTrigger cloudTrigger;
+    public float fallHeight;
+    public float fallTime;
+    public float rangeIndicatorCloseTime;
+    public AnimationCurve rangeIndicatorCloseAnimation;
 	private int idGeneratorIndex;
 	private bool visible = false;
+
+
     private void Start()
     {
         OverwriteValues();
@@ -36,7 +43,11 @@ public class Factory : MonoBehaviour
 					}
 				}
 			}
-			container.SetActive(visible);
+            if (visible)
+            {
+                container.SetActive(visible);
+                cloudTrigger.Show();
+            }
 		}
 	}
 	public void MoveToPosition(Vector2Int position)
@@ -51,15 +62,20 @@ public class Factory : MonoBehaviour
 	}
 	public bool EvaluatePosition()
 	{
-		bool good = true;
+        if (GameFlow.flag != null)
+        {
+            if ((position - GameFlow.flag.position).sqrMagnitude <= ValueLoader.flagBoundaryRange * ValueLoader.flagBoundaryRange)
+            {
+                return false;
+            }
+        }
 		for (int i = rectangle.position.x; i < rectangle.position.x + rectangle.size.x; i++)
 		{
 			for (int j = rectangle.position.y; j < rectangle.position.y + rectangle.size.y; j++)
 			{
 				if (GameFlow.map.GetObstacle(new Vector2Int(i, j)))
 				{
-					good = false;
-					break;
+                    return false;
 				}
 			}
 		}
@@ -67,17 +83,17 @@ public class Factory : MonoBehaviour
 		{
 			if (rectangle.position.y <= 0 || rectangle.position.y+rectangle.size.y > GameFlow.map.height/2)
 			{
-				good = false;
-			}
+                return false;
+            }
 		}
 		else
 		{
 			if (rectangle.position.y <= GameFlow.map.height/2 || rectangle.position.y + rectangle.size.y > GameFlow.map.height)
 			{
-				good = false;
-			}
+                return false;
+            }
 		}
-		return good;
+		return true;
 	}
 	public void Setup(Vector2Int position)
 	{
@@ -143,6 +159,23 @@ public class Factory : MonoBehaviour
 		idGeneratorIndex++;
 		return ((int)Socket.socketType | (idGeneratorIndex++ << 1));
 	}
+    public IEnumerator Despawn()
+    {
+        Vector3 pos = transform.position;
+        Unit unit = GetComponent<Unit>();
+        unit.hpIndicator.gameObject.SetActive(false);
+        for (float i = 0; i < rangeIndicatorCloseTime; i += Time.deltaTime)
+        {
+            unit.rangeIndicator.transform.localScale = Vector3.one * rangeIndicatorCloseAnimation.Evaluate(i / rangeIndicatorCloseTime);
+            yield return new WaitForEndOfFrame();
+        }
+        for (float i = 0;i < fallTime;i += Time.deltaTime)
+        {
+            transform.position = pos + Vector3.forward * (i / fallTime) * fallHeight;
+            yield return new WaitForEndOfFrame();
+        }
+        yield return null;
+    }
 	IEnumerator WrenchSound()
 	{
 		GetComponent<AudioSource>().Play();

@@ -50,12 +50,20 @@ public class SetupFactory : MonoBehaviour, IControl
             prevPosition = clientFactoryPosition;
         }
         GetComponent<MeshRenderer>().enabled = (false);
+
     }
 	private void Start()
 	{
-		GameFlow.cameraControl.Focus(factory.position);
         GameFlow.uiTutorialText.Pop(popMessageStart);
+        StartCoroutine(FocusCoroutine());
 	}
+    IEnumerator FocusCoroutine()
+    {
+        GameFlow.cameraInput.active = false;
+        yield return new WaitForSeconds(1);
+        yield return StartCoroutine(GameFlow.cameraControl.Focus(factory.position,0.2f));
+        GameFlow.cameraInput.active = true;
+    }
 	public void KeyCanceled()
 	{
 		invokeReleaseEvent = false;
