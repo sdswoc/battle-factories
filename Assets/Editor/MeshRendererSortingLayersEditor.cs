@@ -41,7 +41,6 @@ public class MeshRendererSortingLayersEditor : Editor
 		int sID = sortingLayerID.intValue;
 		for (int i = 0; i < layerID.Length; i++)
 		{
-			//Debug.Log(sID + " " + layerID[i]);
 			if (sID == layerID[i])
 			{
 				selected = i;

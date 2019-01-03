@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Multiplayer;
 using UnityEngine.SceneManagement;
+using Army;
+using Singleton;
 
 public class EventHandle : MonoBehaviour 
 {
-	private static bool myTurn;
 	private static List<Pathfinding.PathNode> pathNodes = new List<Pathfinding.PathNode>();
 	private void Awake()
 	{
@@ -43,7 +44,6 @@ public class EventHandle : MonoBehaviour
 			if (GameFlow.friendlyFactory.established && GameFlow.enemyFactory.established)
 			{
 				SocketType firstTurn = SocketType.Server;
-				Debug.Log("TODO set randomness");
 				if (Random.Range(0.1f, 1) > 0)
 				{
 					firstTurn = SocketType.Client;
@@ -114,20 +114,19 @@ public class EventHandle : MonoBehaviour
 			GameFlow.uiWaitMode.Wait(GameFlow.TURN_TIME_LIMIT);
 		}
 		SetResource(GameFlow.money + GameFlow.moneyRate, GameFlow.fuelLimit);
-		EventHandle.myTurn = myTurn;
 	}
 	public static void FinishTurnLocal()
 	{
 		GameFlow.SetMode(Control.UIMode.Fire);
 		GameFlow.uiFireMode.myTurn = true;
-		GameFlow.fireControl.Execute(true);
+		GameFlow.fireControl.ExecuteFiring(true);
 		NetworkEventSend.TurnFinish();
 	}
 	public static void FinishTurnRemote()
 	{
 		GameFlow.SetMode(Control.UIMode.Fire);
 		GameFlow.uiFireMode.myTurn = false;
-		GameFlow.fireControl.Execute(false);
+		GameFlow.fireControl.ExecuteFiring(false);
 	}
 	public static void FinishFire(bool myTurn)
 	{
@@ -139,7 +138,6 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void SendHP()
 	{
-		Debug.Log("HPs sent");
 		int size = GameFlow.units.Count;
 		Vector2Int[] data = new Vector2Int[size];
 		for (int i = 0; i < size; i++)
@@ -167,7 +165,6 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void Initialization()
 	{
-        Debug.Log("Dew it");
         GameFlow.flagCapture = 0;
 		GameFlow.money = ValueLoader.startCoin;
 		GameFlow.fuel = ValueLoader.startFuel;
@@ -188,15 +185,11 @@ public class EventHandle : MonoBehaviour
 	}
 	public static void GoToMainMenu()
 	{
-		SceneManager.LoadScene("TempMainMenu");
+		SceneManager.LoadScene("MainMenu");
 		Socket.Reset();
 		GridRectangle.list.Clear();
 		GameFlow.projectiles.Clear();
 		pathNodes.Clear();
 		GameFlow.units.Clear();
 	}
-    public static void SwitchToGameScene()
-    {
-        
-    }
 }

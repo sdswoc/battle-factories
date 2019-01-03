@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Pathfinding;
+using Army;
 
 namespace Control
 {
@@ -31,7 +32,6 @@ namespace Control
 		private Vector2Int prevPointer;
 		private List<Vector3> vertices = new List<Vector3>();
 		private List<int> triangles = new List<int>();
-		private List<Color> colorList = new List<Color>();
 		private List<PathNode> pathList = new List<PathNode>();
 		private bool active;
 
@@ -48,7 +48,6 @@ namespace Control
 			rangeMeshFilter.mesh = rangeMesh;
 			pathMeshFilter.mesh = pathMesh;
 		}
-
 		private Troop GetUnit(Vector2 position, UnitType type)
 		{
 			float maxDistance = float.PositiveInfinity;
@@ -74,7 +73,6 @@ namespace Control
 			}
 			return tmpUnit;
 		}
-
 		private void Select(Troop unit)
 		{
 			pathList.Clear();
@@ -92,17 +90,15 @@ namespace Control
 				pathMeshFilter.gameObject.SetActive(true);
 
 				GameFlow.potentialMap.GeneratePotential(unit.position, (byte)unit.movementBlock);
-				
-				GenerateCircleMesh(movementMesh, unit.movementBlock, unit.movementBlock + stripWidth, circleDetailMedium);
-				SetMeshColor(movementMesh, movementColor);
-				GenerateCircleMesh(rangeMesh,unit.viewRadius,unit.viewRadius+stripWidth,circleDetailBig);
-				SetMeshColor(rangeMesh, neutralRangeColor);
+				GameFlow.GenerateCircleMesh(movementMesh, unit.movementBlock, unit.movementBlock + stripWidth, circleDetailMedium);
+                GameFlow.SetMeshColor(movementMesh, movementColor);
+                GameFlow.GenerateCircleMesh(rangeMesh,unit.viewRadius,unit.viewRadius+stripWidth,circleDetailBig);
+                GameFlow.SetMeshColor(rangeMesh, neutralRangeColor);
 				movementIndicatorTranform.position = (Vector2)unit.position;
 				rangeIndicatorTransform.position = (Vector2)unit.position;
 				prevPointer = unit.position;
 			}
 		}
-
 		public void KeyPressed(Vector2 position)
 		{
 			triggerReleaseEvent = true;
@@ -122,7 +118,6 @@ namespace Control
 				rangeIndicatorTransform.position = (Vector2)selection.position;
 			}
 		}
-
 		public void KeyReleased(Vector2 position)
 		{
 			if (triggerReleaseEvent)
@@ -135,7 +130,6 @@ namespace Control
 						if (IsValidPosition(GameFlow.potentialMap.GetNearestPoint(prevPointer), selection.position))
 						{
 							EventHandle.MoveFriendlyUnit(selection.unitID, prevPointer, selection.position);
-							Debug.Log("Move");
 						}
 					}
 				}
@@ -144,7 +138,6 @@ namespace Control
 			}
 			Select(null);
 		}
-
 		public void KeyMoved(Vector2 position)
 		{
 			if (selection != null && triggerReleaseEvent)
@@ -154,15 +147,15 @@ namespace Control
 				{
 					if (IsValidPosition(effectivePosition, selection.position) && GameFlow.aStar.GeneratePath(effectivePosition, selection.position, ref pathList, selection.movementBlock))
 					{
-						SetMeshColor(rangeMesh, Color.cyan);
+                        GameFlow.SetMeshColor(rangeMesh, Color.cyan);
 						GeneratePathMesh(pathMesh);
-						SetMeshColor(pathMesh, pathColor);
+                        GameFlow.SetMeshColor(pathMesh, pathColor);
 					}
 					else
 					{
-						SetMeshColor(rangeMesh, Color.red);
+                        GameFlow.SetMeshColor(rangeMesh, Color.red);
 						GeneratePathMesh(pathMesh);
-						SetMeshColor(pathMesh, pathColor);
+                        GameFlow.SetMeshColor(pathMesh, pathColor);
 					}
 					if (pathList.Count > 0)
 					{
@@ -186,49 +179,24 @@ namespace Control
 				}
 			}
 		}
-
 		public void KeyCanceled()
 		{
 			triggerReleaseEvent = false;
 			selection = prevSelection;
 			Select(selection);
 		}
-
 		private bool IsValidPosition(Vector2Int position,Vector2Int selection)
 		{
 			return !GameFlow.map.GetObstacle(position) && (position != selection);
 		}
-
 		private Vector2Int Convert(Vector2 p)
 		{
 			return new Vector2Int(Mathf.RoundToInt(p.x), Mathf.RoundToInt(p.y));
 		}
-		
-		private void GenerateCircleMesh(Mesh m, float radius1, float radius2, int detail)
-		{
-			vertices.Clear();
-			triangles.Clear();
-			for (int i = 0; i < detail; i++)
-			{
-				vertices.Add(new Vector3(Mathf.Sin((float)i * (Mathf.PI / (float)detail) * 2), Mathf.Cos((float)i * (Mathf.PI / (float)detail) * 2)) * radius1);
-				vertices.Add(new Vector3(Mathf.Sin((float)i * (Mathf.PI / (float)detail) * 2), Mathf.Cos((float)i * (Mathf.PI / (float)detail) * 2)) * (radius2));
-				triangles.Add((i * 2 + 0) % (detail * 2));
-				triangles.Add((i * 2 + 1) % (detail * 2));
-				triangles.Add((i * 2 + 2) % (detail * 2));
-				triangles.Add((i * 2 + 1) % (detail * 2));
-				triangles.Add((i * 2 + 3) % (detail * 2));
-				triangles.Add((i * 2 + 2) % (detail * 2));
-			}
-			m.SetVertices(vertices);
-			m.SetTriangles(triangles,0);
-			m.RecalculateNormals();
-			m.RecalculateBounds();
-		}
-
 		private void GeneratePathMesh(Mesh m)
 		{
-			vertices.Clear();
-			triangles.Clear();
+            List<Vector3> vertices = new List<Vector3>();
+            List<int> triangles = new List<int>();
 			if (pathList.Count > 1)
 			{
 				for (int i = 0; i < pathList.Count-1;i++)
@@ -242,7 +210,6 @@ namespace Control
 			pathMesh.RecalculateNormals();
 			pathMesh.RecalculateBounds();
 		}
-
 		private void CreateLine(Vector2Int start,Vector2Int end)
 		{
 			if (end.x-start.x+end.y-start.y < 0)
@@ -273,22 +240,10 @@ namespace Control
 				vertices.Add(start + new Vector2(-pathWidth, pathWidth));
 			}
 		}
-
-		private void SetMeshColor(Mesh m,Color c)
-		{
-			colorList.Clear();
-			for (int i = 0;i < m.vertexCount;i++)
-			{
-				colorList.Add(c);
-			}
-			m.SetColors(colorList);
-		}
-
 		public bool GetActive()
 		{
 			return active;
 		}
-
 		public void SetActive(bool b)
 		{
 			active = b;
@@ -304,7 +259,6 @@ namespace Control
 				gameObject.SetActive(false);
 			}
 		}
-
 		public bool IsCommandingUnit()
 		{
 			return triggerReleaseEvent && (selection != null);

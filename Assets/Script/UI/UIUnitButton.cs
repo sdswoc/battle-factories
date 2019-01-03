@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Singleton;
 
 namespace UI
 {
@@ -52,7 +53,6 @@ namespace UI
 		}
 		public void EvaluateUI()
 		{
-			Debug.Log(button.interactable);
 			if (button.interactable)
 			{
 				GetComponent<Animator>().SetTrigger(button.animationTriggers.normalTrigger);

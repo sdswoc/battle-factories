@@ -49,7 +49,6 @@ public class MenuPanelSwitcher : MonoBehaviour
         currentTransform.gameObject.SetActive(true);
         if (currentTransform != null)
 		{
-
 			for (float i = 0; i < switchTime; i += Time.deltaTime)
 			{
 				currentTransform.localScale = Vector3.one * (curve.Evaluate(i / switchTime));

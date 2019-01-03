@@ -16,28 +16,24 @@ namespace Multiplayer
 		// Code = 2
 		public static void SpawnUnit(int x, int y, byte index, int id)
 		{
-			Debug.Log("SpawnUnit");
 			EventHandle.CreateEnemyUnit(new Vector2Int(x, y), index, id);
 		}
 
 		// Code = 3
 		public static void MoveUnit(int id, Vector2Int from, Vector2Int to)
 		{
-			Debug.Log("MoveUnit");
 			EventHandle.MoveEnemyUnit(id, from, to);
 		}
 
 		// Code = 4
 		public static void SetTurn(bool myTurn)
 		{
-			Debug.Log("SetTurn");
 			EventHandle.SetTurn(myTurn);
 		}
 
 		// Code = 5
 		public static void TurnFinish()
 		{
-			Debug.Log("TurnFinish");
 			EventHandle.FinishTurnRemote();
 		}
 
@@ -51,7 +47,6 @@ namespace Multiplayer
 				data[i].x = p.ReadInt();
 				data[i].y = p.ReadInt();
 			}
-			Debug.Log("HPSync");
 			EventHandle.SyncHP(data);
 		}
 
@@ -59,7 +54,6 @@ namespace Multiplayer
 		public static void NameSync(string name)
 		{
 			GameFlow.enemyName = name;
-			Debug.Log(name);
             GameFlow.menuScript.OnConnected();
 		}
 

@@ -438,6 +438,7 @@ MonoBehaviour:
   mainPosition: {x: 0, y: 0}
   hpIndicator: {fileID: 114703561040222522}
   rangeIndicator: {fileID: 114435623994638070}
+  body: {fileID: 4175529521776392}
   baseObject: {fileID: 1493166691707716}
   selectionRadius: 1
   speed: 10
@@ -446,13 +447,11 @@ MonoBehaviour:
   damage: 2
   fuelConsumption: 3
   visible: 0
+  fallDepth: 1
+  fallSpeed: 4
   attackList: []
   body: {fileID: 4175529521776392}
   fireTime: 0.5
-  fallDepth: 1
-  fallSpeed: 2
-  fallParticle: {fileID: 198928246817831826}
-  fallParticleEmitCount: 40
 --- !u!114 &114435623994638070
 MonoBehaviour:
   m_ObjectHideFlags: 1

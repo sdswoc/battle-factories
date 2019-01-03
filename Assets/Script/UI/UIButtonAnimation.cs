@@ -14,8 +14,6 @@ public class UIButtonAnimation : MonoBehaviour
 	public Color enabledColor;
 	public Color disabledColor;
 	*/
-	private bool enable = true;
-	private bool pressed = false;
 
 	private void Update()
 	{

@@ -64,7 +64,6 @@ namespace Multiplayer
 		public static void DisconnectEvent()
 		{
 			OnDisconnected?.Invoke();
-			Debug.Log("Disconnect");
 		}
 		public static void DataEvent(Packet packet)
 		{
@@ -153,7 +152,6 @@ StopProbe();*/
 				{
 					beaconLocations = list;
 					OnBeaconListUpdated?.Invoke();
-					Debug.Log("Different");
 					return;
 				}
 			}

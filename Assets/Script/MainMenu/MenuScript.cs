@@ -12,7 +12,7 @@ public class MenuScript : MonoBehaviour
 	public InputField nameInputField;
 	public Text ipText;
 	public InputField ipInput;
-	public string name;
+	public new string name;
 	public string ip;
 	public GameObject playerListPrefab;
 	public RectTransform contentTransform;
@@ -113,7 +113,7 @@ public class MenuScript : MonoBehaviour
 		{
 			port = int.Parse(two);
 		}
-		catch (Exception e)
+		catch (Exception)
 		{
 			ipInput.text = "";
 			return;
@@ -131,19 +131,17 @@ public class MenuScript : MonoBehaviour
 			{
 				test = int.Parse(add[i]);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				ipInput.text = "";
 				return;
 			}
 			if (test < 0 || test >= 256)
 			{
-				Debug.Log(test);
 				ipInput.text = "";
 				return;
 			}
 		}
-		Debug.Log("Safe IP");
 		Socket.StartClient(one, port);
 
 	}
@@ -168,6 +166,6 @@ public class MenuScript : MonoBehaviour
     private IEnumerator SwitchScene()
     {
         yield return StartCoroutine(GameFlow.uiCurtain.Close());
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("GameScene");
     }
 }

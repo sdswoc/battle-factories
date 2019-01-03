@@ -69,7 +69,6 @@ public class GridRectangle : MonoBehaviour
 			squareMax = Mathf.Max(squareMax, tt);
 		}
 		int endPara = Dot(end, perpendicular);
-		int startPara = Dot(start, perpendicular);
 		if (endPara <= squareMin || endPara >= squareMax)
 		{
 			return false;
@@ -92,7 +91,6 @@ public class GridRectangle : MonoBehaviour
 		}
 		return true;
 	}
-
 	private int Dot(Vector2Int a, Vector2Int b)
 	{
 		return a.x* b.x+a.y*b.y;	

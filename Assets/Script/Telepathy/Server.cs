@@ -74,7 +74,7 @@ namespace Telepathy
 				}
 				return localIP;
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return "noip";
 			}

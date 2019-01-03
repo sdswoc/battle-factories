@@ -482,6 +482,7 @@ MonoBehaviour:
   mainPosition: {x: 0, y: 0}
   hpIndicator: {fileID: 114830269505609620}
   rangeIndicator: {fileID: 114466885107654518}
+  body: {fileID: 4400505506849872}
   baseObject: {fileID: 1511579005801336}
   selectionRadius: 1
   speed: 8
@@ -490,15 +491,13 @@ MonoBehaviour:
   damage: -5
   fuelConsumption: 2
   visible: 0
+  fallDepth: 1
+  fallSpeed: 4
   attackList: []
   body: {fileID: 4400505506849872}
   barrelTip: {fileID: 4077507154238614}
   fireTime: 1.5
-  fallDepth: 1
-  fallSpeed: 2.5
   projectile: {fileID: 1342261177393556, guid: dfd311efacda6b440836a32e751404b3, type: 2}
-  fallParticle: {fileID: 198538444171255072}
-  fallParticleEmitCount: 40
 --- !u!114 &114830269505609620
 MonoBehaviour:
   m_ObjectHideFlags: 1

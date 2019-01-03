@@ -56,11 +56,7 @@ namespace Pathfinding
 				}
 			}
 			bool isValid = solution != null;
-			if (solution == null)
-			{
-				Debug.Log("Impossible");
-			}
-			else
+			if (solution != null)
 			{
 				path.Clear();
 			}
