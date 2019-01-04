@@ -81,13 +81,11 @@ namespace Control
 			{
 				movementMeshFilter.gameObject.SetActive(false);
 				rangeMeshFilter.gameObject.SetActive(false);
-				pathMeshFilter.gameObject.SetActive(false);
 			}
 			else
 			{
 				movementMeshFilter.gameObject.SetActive(true);
 				rangeMeshFilter.gameObject.SetActive(true);
-				pathMeshFilter.gameObject.SetActive(true);
 
 				GameFlow.potentialMap.GeneratePotential(unit.position, (byte)unit.movementBlock);
 				GameFlow.GenerateCircleMesh(movementMesh, unit.movementBlock, unit.movementBlock + stripWidth, circleDetailMedium);
@@ -167,13 +165,8 @@ namespace Control
 					}
 					if (effectivePosition == selection.position)
 					{
-						pathMeshFilter.gameObject.SetActive(false);
 						rangeIndicatorTransform.position = (Vector2)selection.position;
 						pathList.Clear();
-					}
-					else
-					{
-						pathMeshFilter.gameObject.SetActive(true);
 					}
 					prevPointer = effectivePosition;
 				}
@@ -195,8 +188,8 @@ namespace Control
 		}
 		private void GeneratePathMesh(Mesh m)
 		{
-            List<Vector3> vertices = new List<Vector3>();
-            List<int> triangles = new List<int>();
+            vertices.Clear();
+            triangles.Clear();
 			if (pathList.Count > 1)
 			{
 				for (int i = 0; i < pathList.Count-1;i++)

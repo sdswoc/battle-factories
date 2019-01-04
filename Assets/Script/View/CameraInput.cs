@@ -37,6 +37,10 @@ namespace View
 			{
 				touchControl = true;
 			}
+            else
+            {
+                touchControl = false;
+            }
 			cameraZoomVelocity = 0;
 			cameraZoomTargetSize = cameraZoomCurrentSize = camera.orthographicSize;
 		}
@@ -54,10 +58,6 @@ namespace View
                     MouseUpdate();
                 }
             }
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				GameFlow.SetMode((UIMode)(((int)GameFlow.uiMode+1)%2));
-			}
 		}
 
 		private void TouchUpdate()
